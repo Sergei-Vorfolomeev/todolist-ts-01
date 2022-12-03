@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import TextField from '@mui/material/TextField'
 import Button from "@mui/material/Button";
 
@@ -20,9 +20,13 @@ export const InputComp = (props: InputCompPropsType) => {
             setError('Title is required')
         }
     }
-    const OnChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setError(null)
         setNewTitle(event.currentTarget.value)
+    }
+    const onEnterHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter')
+            addTaskHandler()
     }
     return (
         <div>
@@ -31,8 +35,9 @@ export const InputComp = (props: InputCompPropsType) => {
                 label={error ? error : props.label}
                 variant="outlined"
                 value={newTitle}
-                onChange={OnChangeInputHandler}
+                onChange={onChangeInputHandler}
                 error={!!error}
+                onKeyDown={onEnterHandler}
             />
             <Button
                 variant="contained"
