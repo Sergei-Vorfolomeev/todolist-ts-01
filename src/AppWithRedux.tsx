@@ -38,7 +38,6 @@ function AppWithRedux() {
 
     let todolists = useSelector<AppRootStateType, Array<TodolistsType>>(state => state.todolists);
     // let tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks);
-
     const dispatch = useDispatch()
 
     // const changeFilter = (todolistID: string, filterValue: FilterType) => {
@@ -55,9 +54,9 @@ function AppWithRedux() {
     // }
     const addTodolist = (newTitle: string) => {
         const newID = v1()
-        const newTodolist: TodolistsType = {id: newID, title: newTitle, filter: 'all'}
-        dispatch(addTodolistAC(newTitle, newTodolist))
-        dispatch(addTasksInTodolistAC(newID))
+        // const newTodolist: TodolistsType = {id: newID, title: newTitle, filter: 'all'}
+        dispatch(addTodolistAC(newTitle, newID))
+        // dispatch(addTasksInTodolistAC(newID))
     }
     // const removeTodolist = (todolistID: string) => {
     //     dispatch(removeTodolistAC(todolistID))
@@ -70,9 +69,7 @@ function AppWithRedux() {
             <InputComp callBack={addTodolist}
                        label={'Type new title'}/>
             {todolists.map(el => {
-
-                // let allTasksForTodolist = tasks[el.id]
-                // if (el.filter === 'active')
+                 // if (el.filter === 'active')
                 //     allTasksForTodolist = tasks[el.id].filter(el => !el.isDone)
                 // if (el.filter === 'completed')
                 //     allTasksForTodolist = tasks[el.id].filter(el => el.isDone)

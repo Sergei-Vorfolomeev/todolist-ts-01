@@ -73,7 +73,7 @@ function App() {
     const addTodolist = (newTitle: string) => {
         const newID = v1()
         const newTodolist: TodolistsType = {id: newID, title: newTitle, filter: 'all'}
-        dispatchTodolists(addTodolistAC(newTitle, newTodolist))
+        // dispatchTodolists(addTodolistAC(newTitle, newTodolist))
         dispatchTasks(addTasksInTodolistAC(newID))
     }
     const removeTodolist = (todolistID: string) => {
