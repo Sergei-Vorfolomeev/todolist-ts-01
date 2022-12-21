@@ -5,7 +5,6 @@ import {Todolist} from "./components/Todolist";
 import {InputComp} from "./components/InputComp";
 import {
     addTaskAC,
-    addTasksInTodolistAC,
     changeCheckBoxAC,
     changeTitleTaskAC,
     removeTaskAC,
@@ -74,7 +73,7 @@ function App() {
         const newID = v1()
         const newTodolist: TodolistsType = {id: newID, title: newTitle, filter: 'all'}
         // dispatchTodolists(addTodolistAC(newTitle, newTodolist))
-        dispatchTasks(addTasksInTodolistAC(newID))
+       // dispatchTasks(addTasksInTodolistAC(newID))
     }
     const removeTodolist = (todolistID: string) => {
         dispatchTodolists(removeTodolistAC(todolistID))

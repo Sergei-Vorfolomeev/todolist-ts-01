@@ -20,7 +20,7 @@ export const tasksReducer = (state = initialState, action:GeneralACType) => {
             return {...state, [action.payload.todolistID]: state[action.payload.todolistID].map(el => el.id === action.payload.taskID ? {...el, title: action.payload.newTitle} : el)}
         }
         case "ADD-TODOLIST": {
-            return {...state, [action.payload.todolistId]: []}
+            return {...state, [action.payload.newID]: []}
         }
         default: return state
     }
