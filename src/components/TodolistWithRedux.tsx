@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo, useCallback} from 'react';
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
 import {InputComp} from "./InputComp";
@@ -10,14 +10,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {changeFilterAC, removeTodolistAC} from "../state/todolistsReducer";
 import {addTaskAC, changeCheckBoxAC, changeTitleTaskAC, removeTaskAC} from "../state/tasksReducer";
+import {ButtonWithMemo} from "./ButtonWithMemo";
 
 type TodolistWithReduxPropsType = {
     todolist: TodolistsType
 }
 
-export const TodolistWithRedux = ({todolist}: TodolistWithReduxPropsType) => {
-
-
+export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) => {
+    console.log('Todolist rendered')
     const {id, title, filter} = todolist
     let tasks = useSelector<AppRootStateType, TasksType[]>(state => state.tasks[id])
     const dispatch = useDispatch()
@@ -30,9 +30,9 @@ export const TodolistWithRedux = ({todolist}: TodolistWithReduxPropsType) => {
     const removeTodolist = () => {
         dispatch(removeTodolistAC(id))
     }
-    const addTask = (newTitle: string) => {
+    const addTask = useCallback((newTitle: string) => {
         dispatch(addTaskAC(id, newTitle))
-    }
+    }, [dispatch, id]);
     const changeCheckBox = (taskID: string, checkBoxValue: boolean) => {
         dispatch(changeCheckBoxAC(id, taskID, checkBoxValue))
     }
@@ -42,9 +42,9 @@ export const TodolistWithRedux = ({todolist}: TodolistWithReduxPropsType) => {
     const removeTask = (taskID: string) => {
         dispatch(removeTaskAC(id, taskID))
     }
-    const changeFilter = (filterValue: FilterType) => {
+    const changeFilter = useCallback((filterValue: FilterType) => {
         dispatch(changeFilterAC(id, filterValue))
-    }
+    }, [id, dispatch])
 
     return (
         <div>
@@ -74,14 +74,17 @@ export const TodolistWithRedux = ({todolist}: TodolistWithReduxPropsType) => {
                 })}
             </ul>
             <div>
-                <Button variant={filter === 'all' ? 'contained' : "outlined"} color="secondary"
-                        onClick={() => changeFilter('all')}>All</Button>
-                <Button variant={filter === 'active' ? 'contained' : "outlined"} color="success"
-                        onClick={() => changeFilter('active')}>Active</Button>
-                <Button variant={filter === 'completed' ? 'contained' : "outlined"} color="error"
-                        onClick={() => changeFilter('completed')}>Completed</Button>
+                <ButtonWithMemo title={'All'} color={'primary'} variant={filter === 'all' ? 'contained' : "outlined"} callback={() => changeFilter('all')}/>
+                <ButtonWithMemo title={'Active'} color={'secondary'} variant={filter === 'active' ? 'contained' : "outlined"} callback={() => changeFilter('active')}/>
+                <ButtonWithMemo title={'Completed'} color={'error'} variant={filter === 'completed' ? 'contained' : "outlined"} callback={() => changeFilter('completed')}/>
+                {/*<Button variant={filter === 'all' ? 'contained' : "outlined"} color="secondary"*/}
+                {/*        onClick={() => changeFilter('all')}>All</Button>*/}
+                {/*<Button variant={filter === 'active' ? 'contained' : "outlined"} color="success"*/}
+                {/*        onClick={() => changeFilter('active')}>Active</Button>*/}
+                {/*<Button variant={filter === 'completed' ? 'contained' : "outlined"} color="error"*/}
+                {/*        onClick={() => changeFilter('completed')}>Completed</Button>*/}
             </div>
         </div>
     );
-};
+});
 

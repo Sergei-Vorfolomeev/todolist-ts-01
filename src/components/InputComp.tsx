@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import TextField from '@mui/material/TextField'
 import Button from "@mui/material/Button";
 
@@ -7,7 +7,7 @@ type InputCompPropsType = {
     label: string
 }
 
-export const InputComp = (props: InputCompPropsType) => {
+export const InputComp = memo((props: InputCompPropsType) => {
 
     const [newTitle, setNewTitle] = useState<string>('')
     const [error, setError] = useState<string | null>(null)
@@ -21,7 +21,9 @@ export const InputComp = (props: InputCompPropsType) => {
         }
     }
     const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setError(null)
+        if (error !== null) {
+            setError(null)
+        }
         setNewTitle(event.currentTarget.value)
     }
     const onEnterHandler = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -47,4 +49,4 @@ export const InputComp = (props: InputCompPropsType) => {
             </Button>
         </div>
     );
-};
+});
