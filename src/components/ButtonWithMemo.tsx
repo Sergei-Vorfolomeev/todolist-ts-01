@@ -9,7 +9,6 @@ type ButtonWithMemoPropsType = {
 }
 
 export const ButtonWithMemo = React.memo((props:ButtonWithMemoPropsType) => {
-    console.log('Button')
     return (
         <>
             <Button variant={props.variant}

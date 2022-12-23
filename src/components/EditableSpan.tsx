@@ -1,11 +1,11 @@
-import React, {ChangeEvent,KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 
 type EditableSpanPropsType = {
     title: string
     changeTitleTask: (newTitle: string) => void
 }
 
-export const EditableSpan = (props: EditableSpanPropsType) => {
+export const EditableSpan = memo((props: EditableSpanPropsType) => {
     const [editSpan, setEditSpan] = useState(false)
     const [newEditedTitle, setNewEditedTitle] = useState(props.title)
 
@@ -33,6 +33,6 @@ export const EditableSpan = (props: EditableSpanPropsType) => {
                 {props.title}
               </span>
     );
-};
+});
 
 

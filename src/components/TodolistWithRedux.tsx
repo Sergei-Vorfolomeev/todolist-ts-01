@@ -2,22 +2,19 @@ import React, {memo, useCallback} from 'react';
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
 import {InputComp} from "./InputComp";
-import Checkbox from "@mui/material/Checkbox";
-import {EditableSpan} from "./EditableSpan";
-import Button from "@mui/material/Button";
 import {FilterType, TasksType, TodolistsType} from "../AppWithRedux";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {changeFilterAC, removeTodolistAC} from "../state/todolistsReducer";
 import {addTaskAC, changeCheckBoxAC, changeTitleTaskAC, removeTaskAC} from "../state/tasksReducer";
 import {ButtonWithMemo} from "./ButtonWithMemo";
+import {Task} from "./Task";
 
 type TodolistWithReduxPropsType = {
     todolist: TodolistsType
 }
 
 export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) => {
-    console.log('Todolist rendered')
     const {id, title, filter} = todolist
     let tasks = useSelector<AppRootStateType, TasksType[]>(state => state.tasks[id])
     const dispatch = useDispatch()
@@ -33,15 +30,15 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     const addTask = useCallback((newTitle: string) => {
         dispatch(addTaskAC(id, newTitle))
     }, [dispatch, id]);
-    const changeCheckBox = (taskID: string, checkBoxValue: boolean) => {
+    const changeCheckBox = useCallback((taskID: string, checkBoxValue: boolean) => {
         dispatch(changeCheckBoxAC(id, taskID, checkBoxValue))
-    }
-    const changeTitleTask = (taskID: string, newTitle: string) => {
+    }, [id, dispatch])
+    const changeTitleTask = useCallback((taskID: string, newTitle: string) => {
         dispatch(changeTitleTaskAC(id, taskID, newTitle))
-    }
-    const removeTask = (taskID: string) => {
+    },[id, dispatch])
+    const removeTask = useCallback((taskID: string) => {
         dispatch(removeTaskAC(id, taskID))
-    }
+    }, [id, dispatch])
     const changeFilter = useCallback((filterValue: FilterType) => {
         dispatch(changeFilterAC(id, filterValue))
     }, [id, dispatch])
@@ -61,15 +58,13 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
             <ul>
                 {tasks.map(el => {
                     return (
-                        <li key={el.id}>
-                            <Checkbox checked={el.isDone}
-                                      onChange={(event) => changeCheckBox(el.id, event.currentTarget.checked)}/>
-                            <EditableSpan title={el.title}
-                                          changeTitleTask={(newTitle: string) => changeTitleTask(el.id, newTitle)}/>
-                            <IconButton aria-label="delete" onClick={() => removeTask(el.id)}>
-                                <Delete/>
-                            </IconButton>
-                        </li>
+                        <Task
+                            key={el.id}
+                            task={el}
+                            changeCheckBox={changeCheckBox}
+                            changeTitleTask={changeTitleTask}
+                            removeTask={removeTask}
+                        />
                     )
                 })}
             </ul>
