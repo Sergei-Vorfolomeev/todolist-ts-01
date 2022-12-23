@@ -9,6 +9,7 @@ import {changeFilterAC, removeTodolistAC} from "../state/todolistsReducer";
 import {addTaskAC, changeCheckBoxAC, changeTitleTaskAC, removeTaskAC} from "../state/tasksReducer";
 import {ButtonWithMemo} from "./ButtonWithMemo";
 import {Task} from "./Task";
+import {TaskWithRedux} from "./TaskWithRedux";
 
 type TodolistWithReduxPropsType = {
     todolist: TodolistsType
@@ -35,7 +36,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     }, [id, dispatch])
     const changeTitleTask = useCallback((taskID: string, newTitle: string) => {
         dispatch(changeTitleTaskAC(id, taskID, newTitle))
-    },[id, dispatch])
+    }, [id, dispatch])
     const removeTask = useCallback((taskID: string) => {
         dispatch(removeTaskAC(id, taskID))
     }, [id, dispatch])
@@ -56,22 +57,32 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
                            label={'Type new task'}/>
             </div>
             <ul>
-                {tasks.map(el => {
+                {tasks.map((el, index) => {
                     return (
-                        <Task
-                            key={el.id}
-                            task={el}
-                            changeCheckBox={changeCheckBox}
-                            changeTitleTask={changeTitleTask}
-                            removeTask={removeTask}
-                        />
+
+                        <TaskWithRedux key={el.id}
+                                       todolistID={id}
+                                       taskIndex={index}/>
+
+                        // <Task
+                        //     key={el.id}
+                        //     task={el}
+                        //     changeCheckBox={changeCheckBox}
+                        //     changeTitleTask={changeTitleTask}
+                        //     removeTask={removeTask}
+                        // />
                     )
                 })}
             </ul>
             <div>
-                <ButtonWithMemo title={'All'} color={'primary'} variant={filter === 'all' ? 'contained' : "outlined"} callback={() => changeFilter('all')}/>
-                <ButtonWithMemo title={'Active'} color={'secondary'} variant={filter === 'active' ? 'contained' : "outlined"} callback={() => changeFilter('active')}/>
-                <ButtonWithMemo title={'Completed'} color={'error'} variant={filter === 'completed' ? 'contained' : "outlined"} callback={() => changeFilter('completed')}/>
+                <ButtonWithMemo title={'All'} color={'primary'} variant={filter === 'all' ? 'contained' : "outlined"}
+                                callback={() => changeFilter('all')}/>
+                <ButtonWithMemo title={'Active'} color={'secondary'}
+                                variant={filter === 'active' ? 'contained' : "outlined"}
+                                callback={() => changeFilter('active')}/>
+                <ButtonWithMemo title={'Completed'} color={'error'}
+                                variant={filter === 'completed' ? 'contained' : "outlined"}
+                                callback={() => changeFilter('completed')}/>
                 {/*<Button variant={filter === 'all' ? 'contained' : "outlined"} color="secondary"*/}
                 {/*        onClick={() => changeFilter('all')}>All</Button>*/}
                 {/*<Button variant={filter === 'active' ? 'contained' : "outlined"} color="success"*/}
