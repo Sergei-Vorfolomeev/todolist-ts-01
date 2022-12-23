@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {TasksType} from "../AppWithRedux";
@@ -13,7 +13,7 @@ type TaskWithReduxPropsType = {
     taskIndex: number
 }
 
-export const TaskWithRedux = ({todolistID, taskIndex}:TaskWithReduxPropsType) => {
+export const TaskWithRedux = memo(({todolistID, taskIndex}:TaskWithReduxPropsType) => {
 
     let task = useSelector<AppRootStateType, TasksType>(state => state.tasks[todolistID][taskIndex])
     const dispatch = useDispatch()
@@ -39,5 +39,5 @@ export const TaskWithRedux = ({todolistID, taskIndex}:TaskWithReduxPropsType) =>
             </IconButton>
         </li>
     );
-};
+});
 
