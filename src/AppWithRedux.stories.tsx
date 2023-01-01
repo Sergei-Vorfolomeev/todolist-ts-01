@@ -8,7 +8,7 @@ import {ReduxStoreProviderDecorator} from "./state/ReduxStoreProviderDecorator";
 export default {
     title: 'TODOLISTS/AppWithRedux',
     component: AppWithRedux,
-    decorators: [ReduxStoreProviderDecorator]
+    decorators: [ReduxStoreProviderDecorator],
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 } as ComponentMeta<typeof AppWithRedux>;
 

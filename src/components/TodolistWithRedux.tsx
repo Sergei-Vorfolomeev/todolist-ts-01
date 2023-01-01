@@ -6,9 +6,8 @@ import {FilterType, TasksType, TodolistsType} from "../AppWithRedux";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {changeFilterAC, removeTodolistAC} from "../state/todolistsReducer";
-import {addTaskAC, changeCheckBoxAC, changeTitleTaskAC, removeTaskAC} from "../state/tasksReducer";
+import {addTaskAC} from "../state/tasksReducer";
 import {ButtonWithMemo} from "./ButtonWithMemo";
-import {Task} from "./Task";
 import {TaskWithRedux} from "./TaskWithRedux";
 
 type TodolistWithReduxPropsType = {
@@ -31,15 +30,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     const addTask = useCallback((newTitle: string) => {
         dispatch(addTaskAC(id, newTitle))
     }, [dispatch, id]);
-    const changeCheckBox = useCallback((taskID: string, checkBoxValue: boolean) => {
-        dispatch(changeCheckBoxAC(id, taskID, checkBoxValue))
-    }, [id, dispatch])
-    const changeTitleTask = useCallback((taskID: string, newTitle: string) => {
-        dispatch(changeTitleTaskAC(id, taskID, newTitle))
-    }, [id, dispatch])
-    const removeTask = useCallback((taskID: string) => {
-        dispatch(removeTaskAC(id, taskID))
-    }, [id, dispatch])
+
     const changeFilter = useCallback((filterValue: FilterType) => {
         dispatch(changeFilterAC(id, filterValue))
     }, [id, dispatch])
@@ -63,14 +54,6 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
                         <TaskWithRedux key={el.id}
                                        todolistID={id}
                                        taskIndex={index}/>
-
-                        // <Task
-                        //     key={el.id}
-                        //     task={el}
-                        //     changeCheckBox={changeCheckBox}
-                        //     changeTitleTask={changeTitleTask}
-                        //     removeTask={removeTask}
-                        // />
                     )
                 })}
             </ul>
@@ -83,12 +66,6 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
                 <ButtonWithMemo title={'Completed'} color={'error'}
                                 variant={filter === 'completed' ? 'contained' : "outlined"}
                                 callback={() => changeFilter('completed')}/>
-                {/*<Button variant={filter === 'all' ? 'contained' : "outlined"} color="secondary"*/}
-                {/*        onClick={() => changeFilter('all')}>All</Button>*/}
-                {/*<Button variant={filter === 'active' ? 'contained' : "outlined"} color="success"*/}
-                {/*        onClick={() => changeFilter('active')}>Active</Button>*/}
-                {/*<Button variant={filter === 'completed' ? 'contained' : "outlined"} color="error"*/}
-                {/*        onClick={() => changeFilter('completed')}>Completed</Button>*/}
             </div>
         </div>
     );
