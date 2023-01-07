@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
+import {todolistAPI} from "../api/todolist-api";
 
 export default {
     title: 'API'
@@ -15,8 +16,7 @@ const settings = {
 export const GetTodolists = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        axios.get('https://social-network.samuraijs.com/api/1.1/todo-lists', settings)
-            .then( (response) => {setState(response.data)} )
+        todolistAPI.getTodolists().then(res => setState(res))
         // здесь мы будем делать запрос и ответ закидывать в стейт.
         // который в виде строки будем отображать в div-ке
 
@@ -26,28 +26,23 @@ export const GetTodolists = () => {
 export const CreateTodolist = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'New todo'}, settings)
-            .then((res) => {setState(res.data)})
+        todolistAPI.postTodolist('Hello').then(res => setState(res))
     }, [])
 
     return <div>{JSON.stringify(state)}</div>
 }
 export const DeleteTodolist = () => {
-    const todolistId = 'ae649b05-4996-41e5-ad49-4929bc150cc5';
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}`, settings)
-            .then((res) => {setState(res.data)})
+        todolistAPI.deleteTodolist('6c906dd5-9b54-44b6-ba5b-bb0e3effcb2e').then(res => setState(res))
     }, [])
 
     return <div>{JSON.stringify(state)}</div>
 }
 export const UpdateTodolistTitle = () => {
-    const todolistId = '742516cd-0ee8-4651-8a15-58baeac679cc';
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        axios.put(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}`, {title: 'BlaBla'}, settings)
-            .then(res => setState(res.data))
+        todolistAPI.putTodolist('9d420aae-1dec-4862-a526-c45925534f26', 'World').then(res=> setState(res))
     }, [])
 
     return <div>{JSON.stringify(state)}</div>
