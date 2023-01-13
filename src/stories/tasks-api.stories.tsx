@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {GetTasksResponseType, tasksApi, ResponseType} from "../api/tasks-api";
+import {GetTasksResponseType, tasksAPI, ResponseType} from "../api/tasks-a-p-i";
 
 export default {
     title: 'API'
@@ -8,7 +8,7 @@ export default {
 export const GetTasks = () => {
     const [state, setState] = useState<GetTasksResponseType | null>(null)
     useEffect(() => {
-        tasksApi.getTasks('9d420aae-1dec-4862-a526-c45925534f26')
+        tasksAPI.getTasks('9d420aae-1dec-4862-a526-c45925534f26')
             .then(res => setState(res))
     }, [])
 
@@ -17,7 +17,7 @@ export const GetTasks = () => {
 export const AddTask = () => {
     const [state, setState] = useState<ResponseType | null>(null)
     useEffect( () => {
-        tasksApi.addTask('9d420aae-1dec-4862-a526-c45925534f26', 'Sergey')
+        tasksAPI.addTask('9d420aae-1dec-4862-a526-c45925534f26', 'Sergey')
             .then(res => setState(res))
     }, [])
 
@@ -26,7 +26,7 @@ export const AddTask = () => {
 export const DeleteTask = () => {
     const [state, setState] = useState<ResponseType | null>(null)
     useEffect( () => {
-       tasksApi.deleteTask('9d420aae-1dec-4862-a526-c45925534f26', '69e03972-b73c-4802-a5a1-aaad716db504')
+       tasksAPI.deleteTask('9d420aae-1dec-4862-a526-c45925534f26', '69e03972-b73c-4802-a5a1-aaad716db504')
            .then(res => setState(res))
     }, [])
 
@@ -35,7 +35,7 @@ export const DeleteTask = () => {
 export const UpdateTitleTask = () => {
     const [state, setState] = useState<ResponseType | null>(null)
     useEffect( () => {
-        tasksApi.updateTitleTask(
+        tasksAPI.updateTitleTask(
             '9d420aae-1dec-4862-a526-c45925534f26',
             '7a8a9692-7120-456c-9d10-e4561b734f17',
             'Vadim',

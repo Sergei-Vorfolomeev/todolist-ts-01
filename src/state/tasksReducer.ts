@@ -1,6 +1,6 @@
-import {TasksStateType} from "../App";
+import {TasksStateType} from "../AppWithRedux";
 import {v1} from "uuid";
-import {addTodolistACType} from "./todolistsReducer";
+import {AddTodolistACType, SetTodolistsACType} from "./todolistsReducer";
 
 const initialState: TasksStateType = {}
 
@@ -22,11 +22,19 @@ export const tasksReducer = (state = initialState, action:GeneralACType) => {
         case "ADD-TODOLIST": {
             return {...state, [action.payload.newID]: []}
         }
+        case "SET-TODOLISTS": {
+            const copyState = {...state}
+            action.payload.todolists.forEach(el => {
+                copyState[el.id] = []
+            })
+            return copyState
+        }
         default: return state
     }
 }
 
-type GeneralACType = removeTaskACType | addTaskACType | changeCheckBoxACType | changeTitleTaskACType | addTodolistACType
+type GeneralACType = removeTaskACType | addTaskACType | changeCheckBoxACType | changeTitleTaskACType
+    | AddTodolistACType | SetTodolistsACType
 type removeTaskACType = ReturnType<typeof removeTaskAC>
 type addTaskACType = ReturnType<typeof addTaskAC>
 type changeCheckBoxACType = ReturnType<typeof changeCheckBoxAC>

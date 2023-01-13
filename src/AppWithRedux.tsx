@@ -1,18 +1,10 @@
-import React, {useCallback, useReducer} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {v1} from "uuid";
-import {Todolist} from "./components/Todolist";
 import {InputComp} from "./components/InputComp";
-import {
-    addTaskAC,
-    changeCheckBoxAC,
-    changeTitleTaskAC,
-    removeTaskAC,
-    tasksReducer
-} from "./state/tasksReducer";
-import {addTodolistAC, changeFilterAC, removeTodolistAC, todolistsReducer} from "./state/todolistsReducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./state/store";
+import {addTodolistAC, setTodolistsTC} from "./state/todolistsReducer";
+import {useSelector} from "react-redux";
+import {AppDispatch, AppRootStateType} from "./state/store";
 import {TodolistWithRedux} from "./components/TodolistWithRedux";
 
 export type TodolistsType = {
@@ -35,12 +27,16 @@ function AppWithRedux() {
 
     let todolists = useSelector<AppRootStateType, Array<TodolistsType>>(state => state.todolists);
 
-    const dispatch = useDispatch()
+    const dispatch = AppDispatch()
 
     const addTodolist = useCallback((newTitle: string) => {
         const newID = v1()
         dispatch(addTodolistAC(newTitle, newID))
     },[dispatch])
+
+    useEffect( () => {
+        dispatch(setTodolistsTC())
+    }, [])
 
     return (
         <div className="App">

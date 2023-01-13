@@ -15,7 +15,9 @@ type TaskWithReduxPropsType = {
 
 export const TaskWithRedux = memo(({todolistID, taskIndex}:TaskWithReduxPropsType) => {
 
-    let task = useSelector<AppRootStateType, TasksType>(state => state.tasks[todolistID][taskIndex])
+    let task = useSelector<AppRootStateType, TasksType>(
+        state => state.tasks[todolistID][taskIndex]
+    )
     const dispatch = useDispatch()
 
     const changeCheckBox = (taskID: string, checkBoxValue: boolean) => {

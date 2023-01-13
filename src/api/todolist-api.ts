@@ -4,17 +4,17 @@ const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1',
     withCredentials: true,
     headers: {
-        'API-KEY': 'a055d478-d0d0-4bac-81f0-e978291ab143',
+        'API-KEY': 'd72a289b-3051-456d-82d6-68881a29ae5a',
     }
 })
 
 export const todolistAPI = {
     getTodolists () {
-        return instance.get<TodolistType[]>('/todo-lists')
+        return instance.get<TodolistResponseType[]>('/todo-lists')
             .then( res => res.data )
     },
     createTodolist (title: string) {
-        return  instance.post<ResponseType<{item: TodolistType}>>('/todo-lists', {title: title})
+        return  instance.post<ResponseType<{item: TodolistResponseType}>>('/todo-lists', {title: title})
             .then(res => res.data)
     },
     deleteTodolist (todolistId: string) {
@@ -27,13 +27,13 @@ export const todolistAPI = {
     }
 }
 
-type TodolistType = {
+export type TodolistResponseType = {
     addedDate: string
     id: string
     order: number
     title: string
 }
-type ResponseType<T = {}> = {
+export type ResponseType<T = {}> = {
     data: T
     fieldsErrors: string[]
     messages: string[]

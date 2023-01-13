@@ -50,7 +50,6 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
             <ul>
                 {tasks.map((el, index) => {
                     return (
-
                         <TaskWithRedux key={el.id}
                                        todolistID={id}
                                        taskIndex={index}/>
