@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {GetTasksResponseType, tasksAPI, ResponseType} from "../api/tasks-a-p-i";
+import {GetTasksResponseType, tasksAPI, ResponseType} from "../api/tasks-api";
 
 export default {
     title: 'API'

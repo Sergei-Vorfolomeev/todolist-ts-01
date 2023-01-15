@@ -2,30 +2,14 @@ import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {InputComp} from "./components/InputComp";
-import {addTodolistAC, setTodolistsTC} from "./state/todolistsReducer";
+import {addTodolistAC, setTodolistsTC, TodolistsDomainType} from "./state/todolistsReducer";
 import {useSelector} from "react-redux";
 import {AppDispatch, AppRootStateType} from "./state/store";
 import {TodolistWithRedux} from "./components/TodolistWithRedux";
 
-export type TodolistsType = {
-    id: string
-    title: string
-    filter: FilterType
-}
-export type FilterType = 'all' | 'active' | 'completed'
-
-export type TasksStateType = {
-    [key: string]: TasksType[]
-}
-export type TasksType = {
-    id: string
-    title: string
-    isDone: boolean
-}
-
 function AppWithRedux() {
 
-    let todolists = useSelector<AppRootStateType, Array<TodolistsType>>(state => state.todolists);
+    let todolists = useSelector<AppRootStateType, Array<TodolistsDomainType>>(state => state.todolists);
 
     const dispatch = AppDispatch()
 

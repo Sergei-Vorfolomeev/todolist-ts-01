@@ -1,5 +1,45 @@
 import axios from "axios";
 
+export enum TaskStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3,
+}
+
+export enum TaskPriorities {
+    Low = 0,
+    Middle = 1,
+    High = 2,
+    Urgently = 3,
+    Later = 4,
+}
+
+
+export type TaskResponseType = {
+    addedDate: string
+    deadline: string
+    description: string
+    id: string
+    order: number
+    priority: TaskPriorities
+    startDate: string
+    status: TaskStatuses
+    title: string
+    todolistId: string
+}
+export type GetTasksResponseType = {
+    error: null | string
+    items: TaskResponseType[]
+    totalCount: number
+}
+export type ResponseType<T = {}> = {
+    data: T
+    fieldsErrors: string[]
+    messages: string[]
+    resultCode: number
+}
+
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1',
     withCredentials: true,
@@ -44,26 +84,3 @@ export const tasksAPI = {
     },
 }
 
-export type TaskResponseType = {
-    addedDate: string
-    deadline: null | string
-    description: null | string
-    id: string
-    order: number
-    priority: number
-    startDate: null | string
-    status: number
-    title: string
-    todoListId: string
-}
-export type GetTasksResponseType = {
-    error: null | string
-    items: TaskResponseType[]
-    totalCount: number
-}
-export type ResponseType<T = {}> = {
-    data: T
-    fieldsErrors: string[]
-    messages: string[]
-    resultCode: number
-}
