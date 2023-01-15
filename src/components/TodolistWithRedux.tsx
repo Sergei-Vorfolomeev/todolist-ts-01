@@ -5,9 +5,8 @@ import {InputComp} from "./InputComp";
 import {useSelector} from "react-redux";
 import {AppDispatch, AppRootStateType} from "../state/store";
 import {
-    changeFilterAC,
+    changeFilterAC, changeTodolistTitleTC,
     FilterType,
-    removeTodolistAC,
     removeTodolistTC,
     TodolistsDomainType
 } from "../state/todolistsReducer";
@@ -21,6 +20,7 @@ import {
 import {ButtonWithMemo} from "./ButtonWithMemo";
 import {TaskResponseType, TaskStatuses} from "../api/tasks-api";
 import {Task} from "./Task";
+import {EditableSpan} from "./EditableSpan";
 
 type TodolistWithReduxPropsType = {
     todolist: TodolistsDomainType
@@ -55,11 +55,14 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     const changeCheckBox = (taskID: string, status: TaskStatuses) => {
         dispatch(changeCheckBoxAC(id, taskID, status))
     };
-    const changeTitleTask =(taskID: string, newTitle: string) => {
+    const changeTaskTitle =(taskID: string, newTitle: string) => {
         dispatch(changeTitleTaskAC(id, taskID, newTitle))
     };
     const removeTask =(taskID: string) => {
         dispatch(removeTaskTC(id, taskID))
+    };
+    const changeTodolistTitle = (newTitle: string) => {
+        dispatch(changeTodolistTitleTC(id, newTitle))
     };
 
     useEffect(() => {
@@ -69,7 +72,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     return (
         <div>
             <h3>
-                {title}
+                <EditableSpan title={title} changeTitleTask={changeTodolistTitle}/>
                 <IconButton aria-label="delete" onClick={removeTodolist}>
                     <Delete/>
                 </IconButton>
@@ -83,7 +86,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
                     return (
                         <Task key={el.id}
                               changeCheckBox={changeCheckBox}
-                              changeTitleTask={changeTitleTask}
+                              changeTaskTitle={changeTaskTitle}
                               removeTask={removeTask}
                               task={el}
                         />

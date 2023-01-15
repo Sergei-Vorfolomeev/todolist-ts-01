@@ -33,8 +33,8 @@ export type GetTasksResponseType = {
     items: TaskResponseType[]
     totalCount: number
 }
-export type ResponseType<T = {}> = {
-    data: T
+export type ResponseType<D = {}> = {
+    data: D
     fieldsErrors: string[]
     messages: string[]
     resultCode: number
