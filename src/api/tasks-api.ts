@@ -26,7 +26,7 @@ export type TaskResponseType = {
     startDate: string
     status: TaskStatuses
     title: string
-    todolistId: string
+    todoListId: string
 }
 export type GetTasksResponseType = {
     error: null | string
@@ -44,7 +44,7 @@ const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1',
     withCredentials: true,
     headers: {
-        'API-KEY': 'a055d478-d0d0-4bac-81f0-e978291ab143',
+        'API-KEY': 'd72a289b-3051-456d-82d6-68881a29ae5a',
     }
 })
 

@@ -4,10 +4,21 @@ import Delete from "@mui/icons-material/Delete";
 import {InputComp} from "./InputComp";
 import {useSelector} from "react-redux";
 import {AppDispatch, AppRootStateType} from "../state/store";
-import {changeFilterAC, FilterType, removeTodolistAC, TodolistsDomainType} from "../state/todolistsReducer";
-import {addTaskAC, changeCheckBoxAC, changeTitleTaskAC, removeTaskAC, setTasksTC} from "../state/tasksReducer";
+import {
+    changeFilterAC,
+    FilterType,
+    removeTodolistAC,
+    removeTodolistTC,
+    TodolistsDomainType
+} from "../state/todolistsReducer";
+import {
+    addTaskTC,
+    changeCheckBoxAC,
+    changeTitleTaskAC,
+    removeTaskTC,
+    setTasksTC
+} from "../state/tasksReducer";
 import {ButtonWithMemo} from "./ButtonWithMemo";
-import {TaskWithRedux} from "./TaskWithRedux";
 import {TaskResponseType, TaskStatuses} from "../api/tasks-api";
 import {Task} from "./Task";
 
@@ -31,10 +42,10 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     }
 
     const removeTodolist = () => {
-        dispatch(removeTodolistAC(id))
+        dispatch(removeTodolistTC(id))
     }
     const addTask = useCallback((newTitle: string) => {
-        dispatch(addTaskAC(id, newTitle))
+        dispatch(addTaskTC(id, newTitle))
     }, [dispatch, id]);
 
     const changeFilter = useCallback((filterValue: FilterType) => {
@@ -48,7 +59,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
         dispatch(changeTitleTaskAC(id, taskID, newTitle))
     };
     const removeTask =(taskID: string) => {
-        dispatch(removeTaskAC(id, taskID))
+        dispatch(removeTaskTC(id, taskID))
     };
 
     useEffect(() => {

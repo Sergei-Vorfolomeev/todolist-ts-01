@@ -41,7 +41,7 @@ const initialGlobalState = {
                 order: 0,
                 priority: TaskPriorities.Middle,
                 startDate: '',
-                todolistId: ''
+                todoListId: ''
             },
             {
                 id: v1(),
@@ -53,7 +53,7 @@ const initialGlobalState = {
                 order: 0,
                 priority: TaskPriorities.Middle,
                 startDate: '',
-                todolistId: ''
+                todoListId: ''
             }
         ],
         ['todolistId2']: [
@@ -67,7 +67,7 @@ const initialGlobalState = {
                 order: 0,
                 priority: TaskPriorities.Middle,
                 startDate: '',
-                todolistId: ''
+                todoListId: ''
             },
             {
                 id: v1(),
@@ -79,7 +79,7 @@ const initialGlobalState = {
                 order: 0,
                 priority: TaskPriorities.Middle,
                 startDate: '',
-                todolistId: ''
+                todoListId: ''
             }
         ]
     }

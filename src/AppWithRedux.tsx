@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {InputComp} from "./components/InputComp";
-import {addTodolistAC, setTodolistsTC, TodolistsDomainType} from "./state/todolistsReducer";
+import {addTodolistAC, addTodolistTC, setTodolistsTC, TodolistsDomainType} from "./state/todolistsReducer";
 import {useSelector} from "react-redux";
 import {AppDispatch, AppRootStateType} from "./state/store";
 import {TodolistWithRedux} from "./components/TodolistWithRedux";
@@ -14,8 +14,7 @@ function AppWithRedux() {
     const dispatch = AppDispatch()
 
     const addTodolist = useCallback((newTitle: string) => {
-        const newID = v1()
-        dispatch(addTodolistAC(newTitle, newID))
+        dispatch(addTodolistTC(newTitle))
     },[dispatch])
 
     useEffect( () => {
