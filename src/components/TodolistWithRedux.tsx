@@ -5,18 +5,13 @@ import {InputComp} from "./InputComp";
 import {useSelector} from "react-redux";
 import {AppDispatch, AppRootStateType} from "../state/store";
 import {
-    changeFilterAC, changeTodolistTitleTC,
+    changeFilterAC,
+    changeTodolistTitleTC,
     FilterType,
     removeTodolistTC,
     TodolistsDomainType
 } from "../state/todolistsReducer";
-import {
-    addTaskTC,
-    changeCheckBoxAC, changeCheckBoxTC,
-    changeTitleTaskAC,
-    removeTaskTC,
-    setTasksTC
-} from "../state/tasksReducer";
+import {addTaskTC, removeTaskTC, setTasksTC, updateTaskTC} from "../state/tasksReducer";
 import {ButtonWithMemo} from "./ButtonWithMemo";
 import {TaskResponseType, TaskStatuses} from "../api/tasks-api";
 import {Task} from "./Task";
@@ -51,10 +46,10 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     }, [id, dispatch])
 
     const changeCheckBox = useCallback((taskID: string, status: TaskStatuses) => {
-        dispatch(changeCheckBoxTC(id, taskID, status))
+        dispatch(updateTaskTC(id, taskID, {status}))
     }, [id, dispatch])
     const changeTaskTitle = useCallback((taskID: string, newTitle: string) => {
-        dispatch(changeTitleTaskAC(id, taskID, newTitle))
+        dispatch(updateTaskTC(id, taskID, {title: newTitle}))
     },[id, dispatch]);
     const removeTask = useCallback((taskID: string) => {
         dispatch(removeTaskTC(id, taskID))

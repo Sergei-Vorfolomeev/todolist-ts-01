@@ -1,11 +1,11 @@
 import React, {memo} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../state/store";
+import {AppDispatch, AppRootStateType} from "../state/store";
 import Checkbox from "@mui/material/Checkbox";
 import {EditableSpan} from "./EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
-import {changeCheckBoxAC, changeTitleTaskAC, removeTaskAC} from "../state/tasksReducer";
+import {removeTaskAC, updateTaskAC, updateTaskTC} from "../state/tasksReducer";
 import {TaskResponseType, TaskStatuses} from "../api/tasks-api";
 
 type TaskWithReduxPropsType = {
@@ -22,13 +22,13 @@ export const TaskWithRedux = memo(({todolistID, taskIndex}:TaskWithReduxPropsTyp
     let task = useSelector<AppRootStateType, TaskResponseType>(
         state => state.tasks[todolistID][taskIndex]
     )
-    const dispatch = useDispatch()
+    const dispatch = AppDispatch()
 
     const changeCheckBox = (taskID: string, status: TaskStatuses) => {
-        dispatch(changeCheckBoxAC(todolistID, taskID, status))
+        dispatch(updateTaskTC(todolistID, taskID, {status}))
     };
     const changeTitleTask =(taskID: string, newTitle: string) => {
-        dispatch(changeTitleTaskAC(todolistID, taskID, newTitle))
+        dispatch(updateTaskTC(todolistID, taskID, {title: newTitle}))
     };
     const removeTask =(taskID: string) => {
         dispatch(removeTaskAC(todolistID, taskID))

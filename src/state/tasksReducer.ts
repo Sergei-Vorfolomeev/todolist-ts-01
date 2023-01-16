@@ -1,10 +1,8 @@
-import {v1} from "uuid";
 import {AddTodolistACType, SetTodolistsACType} from "./todolistsReducer";
 import {Dispatch} from "redux";
-import {TaskModelType, TaskPriorities, TaskResponseType, tasksAPI, TaskStatuses} from "../api/tasks-api";
+import {TaskModelAPIType, TaskPriorities, TaskResponseType, tasksAPI, TaskStatuses} from "../api/tasks-api";
 import {TasksStateType} from "../components/TaskWithRedux";
 import {AppRootStateType} from "./store";
-import warning from "react-redux/es/utils/warning";
 
 const initialState: TasksStateType = {}
 
@@ -20,23 +18,14 @@ export const tasksReducer = (state = initialState, action: GeneralACType): Tasks
             const newTask: TaskResponseType = action.payload.task
             return {...state, [action.payload.todolistID]: [newTask, ...state[action.payload.todolistID]]}
         }
-        case "CHANGE-CHECK-BOX": {
+        case "UPDATE-TASK": {
             return {
                 ...state,
                 [action.payload.todolistID]: state[action.payload.todolistID].map(el =>
                     el.id === action.payload.taskID
-                        ? {...el, status: action.payload.status}
+                        ? {...el, ...action.payload.apiModel}
                         : el
                 )
-            }
-        }
-        case "CHANGE-TITLE-TASK": {
-            return {
-                ...state,
-                [action.payload.todolistID]: state[action.payload.todolistID].map(el => el.id === action.payload.taskID ? {
-                    ...el,
-                    title: action.payload.newTitle
-                } : el)
             }
         }
         case "ADD-TODOLIST": {
@@ -60,12 +49,15 @@ export const tasksReducer = (state = initialState, action: GeneralACType): Tasks
     }
 }
 
-type GeneralACType = RemoveTaskACType | AddTaskACType | ChangeCheckBoxACType | ChangeTitleTaskACType
-    | AddTodolistACType | SetTodolistsACType | SetTasksACType
+type GeneralACType = RemoveTaskACType
+    | AddTaskACType
+    | updateTaskACType
+    | AddTodolistACType
+    | SetTodolistsACType
+    | SetTasksACType
 type RemoveTaskACType = ReturnType<typeof removeTaskAC>
 type AddTaskACType = ReturnType<typeof addTaskAC>
-type ChangeCheckBoxACType = ReturnType<typeof changeCheckBoxAC>
-type ChangeTitleTaskACType = ReturnType<typeof changeTitleTaskAC>
+type updateTaskACType = ReturnType<typeof updateTaskAC>
 type SetTasksACType = ReturnType<typeof setTasksAC>
 // type addTasksInTodolistACType = ReturnType<typeof addTasksInTodolistAC>
 
@@ -85,19 +77,11 @@ export const addTaskAC = (todolistID: string, task: TaskResponseType) => {
         }
     } as const
 }
-export const changeCheckBoxAC = (todolistID: string, taskID: string, status: TaskStatuses) => {
+export const updateTaskAC = (todolistID: string, taskID: string, apiModel: TaskModelAPIType) => {
     return {
-        type: 'CHANGE-CHECK-BOX',
+        type: 'UPDATE-TASK',
         payload: {
-            todolistID, taskID, status
-        }
-    } as const
-}
-export const changeTitleTaskAC = (todolistID: string, taskID: string, newTitle: string) => {
-    return {
-        type: 'CHANGE-TITLE-TASK',
-        payload: {
-            todolistID, taskID, newTitle
+            todolistID, taskID, apiModel
         }
     } as const
 }
@@ -122,37 +106,48 @@ export const setTasksAC = (tasks: TaskResponseType[], todolistID: string) => {
 
 export const setTasksTC = (todolistID: string) =>
     (dispatch: Dispatch) => {
-    tasksAPI.getTasks(todolistID)
-        .then(res => dispatch(setTasksAC(res.items, todolistID)))
-}
+        tasksAPI.getTasks(todolistID)
+            .then(res => dispatch(setTasksAC(res.items, todolistID)))
+    }
 
 export const removeTaskTC = (todolistID: string, taskID: string) =>
     (dispatch: Dispatch) => {
-    tasksAPI.deleteTask(todolistID, taskID)
-        .then(res => dispatch(removeTaskAC(todolistID, taskID)))
-}
+        tasksAPI.deleteTask(todolistID, taskID)
+            .then(res => dispatch(removeTaskAC(todolistID, taskID)))
+    }
 
 export const addTaskTC = (todolistID: string, title: string) =>
     (dispatch: Dispatch) => {
-    tasksAPI.addTask(todolistID, title)
-        .then(res => dispatch(addTaskAC(todolistID, res.data.item)))
+        tasksAPI.addTask(todolistID, title)
+            .then(res => dispatch(addTaskAC(todolistID, res.data.item)))
+    }
+
+
+export type TaskModelDomainType = {
+    title?: string
+    description?: string,
+    status?: TaskStatuses,
+    priority?: TaskPriorities,
+    startDate?: string,
+    deadline?: string,
 }
 
-export const changeCheckBoxTC = (todolistID: string, taskID: string, status: TaskStatuses) =>
+export const updateTaskTC = (todolistID: string, taskID: string, domainModel: TaskModelDomainType) =>
     (dispatch: Dispatch, getState: () => AppRootStateType) => {
-    const task = getState().tasks[todolistID].find(el => el.id === taskID)
+        const task = getState().tasks[todolistID].find(el => el.id === taskID)
         if (!task) {
             console.warn('Task not found in the state!')
             return;
         }
-        const model: TaskModelType = {
-        title: task.title,
-        description: task.description,
-        status: status,
-        priority: task.priority,
-        startDate: task.startDate,
-        deadline: task.deadline,
+        const apiModel: TaskModelAPIType = {
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            priority: task.priority,
+            startDate: task.startDate,
+            deadline: task.deadline,
+            ...domainModel,
+        }
+        tasksAPI.updateTask(todolistID, taskID, apiModel)
+            .then(res => dispatch(updateTaskAC(todolistID, taskID, apiModel)))
     }
-    tasksAPI.updateTitleTask(todolistID, taskID, model)
-        .then(res =>  dispatch(changeCheckBoxAC(todolistID, taskID, status)))
-}
