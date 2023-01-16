@@ -18,7 +18,7 @@ export const Task = memo((props: TaskType) => {
             <Checkbox checked={props.task.status === TaskStatuses.Completed}
                       onChange={(event) => props.changeCheckBox(props.task.id, event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New)}/>
             <EditableSpan title={props.task.title}
-                          changeTitleTask={(newTitle: string) => props.changeTaskTitle(props.task.id, newTitle)}/>
+                          changeTitle={(newTitle: string) => props.changeTaskTitle(props.task.id, newTitle)}/>
             <IconButton aria-label="delete" onClick={() => props.removeTask(props.task.id)}>
                 <Delete/>
             </IconButton>

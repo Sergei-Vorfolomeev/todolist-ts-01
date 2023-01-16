@@ -39,7 +39,7 @@ export const TaskWithRedux = memo(({todolistID, taskIndex}:TaskWithReduxPropsTyp
             <Checkbox checked={task.status === TaskStatuses.Completed}
                       onChange={(event) => changeCheckBox(task.id, event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New)}/>
             <EditableSpan title={task.title}
-                          changeTitleTask={(newTitle: string) => changeTitleTask(task.id, newTitle)}/>
+                          changeTitle={(newTitle: string) => changeTitleTask(task.id, newTitle)}/>
             <IconButton aria-label="delete" onClick={() => removeTask(task.id)}>
                 <Delete/>
             </IconButton>

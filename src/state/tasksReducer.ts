@@ -1,15 +1,16 @@
 import {v1} from "uuid";
 import {AddTodolistACType, SetTodolistsACType} from "./todolistsReducer";
 import {Dispatch} from "redux";
-import {TaskPriorities, TaskResponseType, tasksAPI, TaskStatuses} from "../api/tasks-api";
+import {TaskModelType, TaskPriorities, TaskResponseType, tasksAPI, TaskStatuses} from "../api/tasks-api";
 import {TasksStateType} from "../components/TaskWithRedux";
+import {AppRootStateType} from "./store";
+import warning from "react-redux/es/utils/warning";
 
 const initialState: TasksStateType = {}
 
 export const tasksReducer = (state = initialState, action: GeneralACType): TasksStateType => {
     switch (action.type) {
         case 'REMOVE-TASK': {
-            debugger
             return {
                 ...state,
                 [action.payload.todolistID]: state[action.payload.todolistID].filter(el => el.id !== action.payload.taskID)
@@ -119,17 +120,39 @@ export const setTasksAC = (tasks: TaskResponseType[], todolistID: string) => {
     } as const
 }
 
-export const setTasksTC = (todolistID: string) => (dispatch: Dispatch) => {
+export const setTasksTC = (todolistID: string) =>
+    (dispatch: Dispatch) => {
     tasksAPI.getTasks(todolistID)
         .then(res => dispatch(setTasksAC(res.items, todolistID)))
 }
 
-export const removeTaskTC = (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
+export const removeTaskTC = (todolistID: string, taskID: string) =>
+    (dispatch: Dispatch) => {
     tasksAPI.deleteTask(todolistID, taskID)
         .then(res => dispatch(removeTaskAC(todolistID, taskID)))
 }
 
-export const addTaskTC = (todolistID: string, title: string) => (dispatch: Dispatch) => {
+export const addTaskTC = (todolistID: string, title: string) =>
+    (dispatch: Dispatch) => {
     tasksAPI.addTask(todolistID, title)
         .then(res => dispatch(addTaskAC(todolistID, res.data.item)))
+}
+
+export const changeCheckBoxTC = (todolistID: string, taskID: string, status: TaskStatuses) =>
+    (dispatch: Dispatch, getState: () => AppRootStateType) => {
+    const task = getState().tasks[todolistID].find(el => el.id === taskID)
+        if (!task) {
+            console.warn('Task not found in the state!')
+            return;
+        }
+        const model: TaskModelType = {
+        title: task.title,
+        description: task.description,
+        status: status,
+        priority: task.priority,
+        startDate: task.startDate,
+        deadline: task.deadline,
+    }
+    tasksAPI.updateTitleTask(todolistID, taskID, model)
+        .then(res =>  dispatch(changeCheckBoxAC(todolistID, taskID, status)))
 }

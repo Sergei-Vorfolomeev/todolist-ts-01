@@ -48,6 +48,24 @@ const instance = axios.create({
     }
 })
 
+export type TaskModelType = {
+    title: string
+    description: string,
+    status: TaskStatuses,
+    priority: TaskPriorities,
+    startDate: string,
+    deadline: string,
+}
+
+const model: TaskModelType = {
+    title: '',
+    description: '',
+    status: TaskStatuses.New,
+    priority: TaskPriorities.Middle,
+    startDate: '',
+    deadline: ''
+}
+
 export const tasksAPI = {
     getTasks(todolistId: string) {
         return instance.get<GetTasksResponseType>(`/todo-lists/${todolistId}/tasks`)
@@ -61,25 +79,9 @@ export const tasksAPI = {
         return instance.delete<ResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
             .then(res => res.data)
     },
-    updateTitleTask(todolistId: string,
-                    taskId: string,
-                    title: string,
-                    description: string | null,
-                    completed: boolean,
-                    status: number,
-                    priority: number,
-                    startDate: string | null,
-                    deadline: string | null,
-    ) {
-        return instance.put<ResponseType<{item: TaskResponseType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, {
-            title,
-            description: null,
-            completed: false,
-            status: 0,
-            priority: 1,
-            startDate: null,
-            deadline: null
-        })
+
+    updateTitleTask(todolistId: string, taskId: string, model: TaskModelType) {
+        return instance.put<ResponseType<{item: TaskResponseType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
             .then(res => res.data)
     },
 }

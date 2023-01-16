@@ -1,4 +1,5 @@
 import axios from "axios";
+import {TaskStatuses} from "./tasks-api";
 
 
 export type TodolistResponseType = {
@@ -38,6 +39,6 @@ export const todolistAPI = {
     updateTodolist (todolistId: string, title: string) {
         return instance.put<ResponseType>(`/todo-lists/${todolistId}`, {title: title})
             .then(res => res.data)
-    }
+    },
 }
 

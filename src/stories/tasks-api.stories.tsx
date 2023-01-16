@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {GetTasksResponseType, tasksAPI, ResponseType} from "../api/tasks-api";
+import {GetTasksResponseType, tasksAPI, ResponseType, TaskStatuses, TaskPriorities} from "../api/tasks-api";
 
 export default {
     title: 'API'
@@ -38,13 +38,14 @@ export const UpdateTitleTask = () => {
         tasksAPI.updateTitleTask(
             '9d420aae-1dec-4862-a526-c45925534f26',
             '7a8a9692-7120-456c-9d10-e4561b734f17',
-            'Vadim',
-            null,
-            false,
-            0,
-            1,
-            null,
-            null)
+            {
+                title: '',
+                description: '',
+                status: TaskStatuses.New,
+                priority: TaskPriorities.Middle,
+                startDate: '',
+                deadline: ''
+            })
             .then(res => setState(res))
     }, [])
 

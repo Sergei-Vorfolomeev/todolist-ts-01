@@ -2,7 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 
 type EditableSpanPropsType = {
     title: string
-    changeTitleTask: (newTitle: string) => void
+    changeTitle: (newTitle: string) => void
 }
 
 export const EditableSpan = memo((props: EditableSpanPropsType) => {
@@ -10,15 +10,20 @@ export const EditableSpan = memo((props: EditableSpanPropsType) => {
     const [newEditedTitle, setNewEditedTitle] = useState(props.title)
 
     const tranformSpan = () => {
-        setEditSpan(!editSpan)
+        if (!editSpan) {
+            setEditSpan(!editSpan)
+        } else {
+            setEditSpan(!editSpan)
+            props.changeTitle(newEditedTitle)
+        }
     }
     const changeTitleTaskHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setNewEditedTitle(event.currentTarget.value)
-        props.changeTitleTask(event.currentTarget.value)
     }
     const onEnterHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter')
+        if (event.key === 'Enter') {
             tranformSpan()
+        }
     }
 
     return (

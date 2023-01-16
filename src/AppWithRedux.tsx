@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {v1} from "uuid";
 import {InputComp} from "./components/InputComp";
-import {addTodolistAC, addTodolistTC, setTodolistsTC, TodolistsDomainType} from "./state/todolistsReducer";
+import {addTodolistTC, setTodolistsTC, TodolistsDomainType} from "./state/todolistsReducer";
 import {useSelector} from "react-redux";
 import {AppDispatch, AppRootStateType} from "./state/store";
 import {TodolistWithRedux} from "./components/TodolistWithRedux";

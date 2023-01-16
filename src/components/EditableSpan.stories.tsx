@@ -10,7 +10,7 @@ export default {
     component: EditableSpan,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {
-        changeTitleTask: {
+        changeTitle: {
             description: 'Double click inside span'
         },
     },
@@ -22,7 +22,7 @@ const Template: ComponentStory<typeof EditableSpan> = (args) => <EditableSpan {.
 export const EditableSpanStory = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 EditableSpanStory.args = {
-    changeTitleTask: action('Change title task'),
+    changeTitle: action('Change title task'),
     title: 'HTML'
 };
 

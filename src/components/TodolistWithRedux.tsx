@@ -12,7 +12,7 @@ import {
 } from "../state/todolistsReducer";
 import {
     addTaskTC,
-    changeCheckBoxAC,
+    changeCheckBoxAC, changeCheckBoxTC,
     changeTitleTaskAC,
     removeTaskTC,
     setTasksTC
@@ -31,14 +31,12 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     let tasks = useSelector<AppRootStateType, TaskResponseType[]>(state => state.tasks[id])
     const dispatch = AppDispatch()
 
-    let allFilteredTasks = tasks
-
     if (filter === 'active') {
-        allFilteredTasks = tasks.filter(el => el.status === TaskStatuses.New)
+        tasks = tasks.filter(el => el.status === TaskStatuses.New)
         // console.log(tasks)
     }
     if (filter === 'completed') {
-        allFilteredTasks = tasks.filter(el => el.status === TaskStatuses.Completed)
+        tasks = tasks.filter(el => el.status === TaskStatuses.Completed)
     }
 
     const removeTodolist = () => {
@@ -52,15 +50,15 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
         dispatch(changeFilterAC(id, filterValue))
     }, [id, dispatch])
 
-    const changeCheckBox = (taskID: string, status: TaskStatuses) => {
-        dispatch(changeCheckBoxAC(id, taskID, status))
-    };
-    const changeTaskTitle =(taskID: string, newTitle: string) => {
+    const changeCheckBox = useCallback((taskID: string, status: TaskStatuses) => {
+        dispatch(changeCheckBoxTC(id, taskID, status))
+    }, [id, dispatch])
+    const changeTaskTitle = useCallback((taskID: string, newTitle: string) => {
         dispatch(changeTitleTaskAC(id, taskID, newTitle))
-    };
-    const removeTask =(taskID: string) => {
+    },[id, dispatch]);
+    const removeTask = useCallback((taskID: string) => {
         dispatch(removeTaskTC(id, taskID))
-    };
+    },[id, dispatch]);
     const changeTodolistTitle = (newTitle: string) => {
         dispatch(changeTodolistTitleTC(id, newTitle))
     };
@@ -72,7 +70,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     return (
         <div>
             <h3>
-                <EditableSpan title={title} changeTitleTask={changeTodolistTitle}/>
+                <EditableSpan title={title} changeTitle={changeTodolistTitle}/>
                 <IconButton aria-label="delete" onClick={removeTodolist}>
                     <Delete/>
                 </IconButton>
@@ -82,7 +80,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
                            label={'Type new task'}/>
             </div>
             <ul>
-                {allFilteredTasks.map((el) => {
+                {tasks.map((el) => {
                     return (
                         <Task key={el.id}
                               changeCheckBox={changeCheckBox}
