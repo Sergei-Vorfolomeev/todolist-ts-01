@@ -3,7 +3,7 @@ import '../App.css';
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
 import {InputComp} from "./InputComp";
-import {AppDispatch, useAppSelector} from "../state/store";
+import {useAppDispatch, useAppSelector} from "../state/store";
 import {
     changeFilterAC,
     changeTodolistTitleTC,
@@ -24,7 +24,7 @@ type TodolistWithReduxPropsType = {
 export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) => {
     const {id, title, filter} = todolist
     let tasks = useAppSelector<TaskResponseType[]>(state => state.tasks[id])
-    const dispatch = AppDispatch()
+    const dispatch = useAppDispatch()
 
     if (filter === 'active') {
         tasks = tasks.filter(el => el.status === TaskStatuses.New)

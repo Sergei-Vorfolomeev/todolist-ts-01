@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, AppRootStateType} from "../state/store";
+import {useAppDispatch, AppRootStateType} from "../state/store";
 import Checkbox from "@mui/material/Checkbox";
 import {EditableSpan} from "./EditableSpan";
 import IconButton from "@mui/material/IconButton";
@@ -22,7 +22,7 @@ export const TaskWithRedux = memo(({todolistID, taskIndex}:TaskWithReduxPropsTyp
     let task = useSelector<AppRootStateType, TaskResponseType>(
         state => state.tasks[todolistID][taskIndex]
     )
-    const dispatch = AppDispatch()
+    const dispatch = useAppDispatch()
 
     const changeCheckBox = (taskID: string, status: TaskStatuses) => {
         dispatch(updateTaskTC(todolistID, taskID, {status}))

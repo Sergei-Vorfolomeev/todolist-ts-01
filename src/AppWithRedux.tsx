@@ -3,7 +3,7 @@ import './App.css';
 import {InputComp} from "./components/InputComp";
 import {addTodolistTC, setTodolistsTC, TodolistsDomainType} from "./state/todolistsReducer";
 import {useSelector} from "react-redux";
-import {AppDispatch, AppRootStateType, useAppSelector} from "./state/store";
+import {useAppDispatch, AppRootStateType, useAppSelector} from "./state/store";
 import {TodolistWithRedux} from "./components/TodolistWithRedux";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from '@mui/material/AppBar';
@@ -14,12 +14,15 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {RequestStatusType} from "./state/appReducer";
+import {ErrorSnackBar} from "./components/SnackBar";
 
 function AppWithRedux() {
 
     let todolists = useSelector<AppRootStateType, Array<TodolistsDomainType>>(state => state.todolists);
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
-    const dispatch = AppDispatch()
+    const error = useAppSelector<null | string>(state => state.app.error)
+
+    const dispatch = useAppDispatch()
 
     const addTodolist = useCallback((newTitle: string) => {
         dispatch(addTodolistTC(newTitle))
@@ -66,6 +69,7 @@ function AppWithRedux() {
                         />
                     )
                 })}
+                {error && <ErrorSnackBar error={error}/>}
             </div>
         </div>
     );
