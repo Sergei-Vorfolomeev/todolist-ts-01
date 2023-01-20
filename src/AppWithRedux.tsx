@@ -3,7 +3,7 @@ import './App.css';
 import {InputComp} from "./components/InputComp";
 import {addTodolistTC, setTodolistsTC, TodolistsDomainType} from "./state/todolistsReducer";
 import {useSelector} from "react-redux";
-import {AppDispatch, AppRootStateType} from "./state/store";
+import {AppDispatch, AppRootStateType, useAppSelector} from "./state/store";
 import {TodolistWithRedux} from "./components/TodolistWithRedux";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from '@mui/material/AppBar';
@@ -13,26 +13,26 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import {RequestStatusType} from "./state/appReducer";
 
 function AppWithRedux() {
 
     let todolists = useSelector<AppRootStateType, Array<TodolistsDomainType>>(state => state.todolists);
-
+    const status = useAppSelector<RequestStatusType>(state => state.app.status)
     const dispatch = AppDispatch()
 
     const addTodolist = useCallback((newTitle: string) => {
         dispatch(addTodolistTC(newTitle))
-    },[dispatch])
+    }, [dispatch])
 
-    useEffect( () => {
+    useEffect(() => {
         dispatch(setTodolistsTC())
     }, [])
 
     return (
-
         <div className="App">
             <div className='appBar'>
-                <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{flexGrow: 1}}>
                     <AppBar position="static">
                         <Toolbar>
                             <IconButton
@@ -40,16 +40,16 @@ function AppWithRedux() {
                                 edge="start"
                                 color="inherit"
                                 aria-label="menu"
-                                sx={{ mr: 2 }}
+                                sx={{mr: 2}}
                             >
-                                <MenuIcon />
+                                <MenuIcon/>
                             </IconButton>
-                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                            <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                                 News
                             </Typography>
                             <Button color="inherit">Login</Button>
                         </Toolbar>
-                        <LinearProgress color="secondary" />
+                        {status === 'loading' && <LinearProgress color="secondary"/>}
                     </AppBar>
                 </Box>
             </div>

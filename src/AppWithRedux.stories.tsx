@@ -1,14 +1,14 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import AppWithRedux from "./AppWithRedux";
-import {ReduxStoreProviderDecorator} from "./state/ReduxStoreProviderDecorator";
+// import {ReduxStoreProviderDecorator} from "./state/ReduxStoreProviderDecorator";
 
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
     title: 'TODOLISTS/AppWithRedux',
     component: AppWithRedux,
-    decorators: [ReduxStoreProviderDecorator],
+    // decorators: [ReduxStoreProviderDecorator],
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 } as ComponentMeta<typeof AppWithRedux>;
 
