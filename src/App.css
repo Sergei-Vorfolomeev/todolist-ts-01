@@ -1,8 +1,27 @@
 .App {
-  padding: 30px;
-  display: flex;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
 }
 
 .App > div {
-  margin-right: 50px;
+    margin-right: 50px;
+}
+
+.appBar {
+    margin-bottom: 50px;
+}
+
+.inputComp {
+    width: 100%;
+    padding: 30px;
+}
+
+.todolists {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.todolist {
+    padding: 30px;
 }

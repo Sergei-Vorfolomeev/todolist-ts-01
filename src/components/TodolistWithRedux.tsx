@@ -1,4 +1,5 @@
 import React, {memo, useCallback, useEffect} from 'react';
+import '../App.css';
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
 import {InputComp} from "./InputComp";
@@ -63,7 +64,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     }, [])
 
     return (
-        <div>
+        <div className='todolist'>
             <h3>
                 <EditableSpan title={title} changeTitle={changeTodolistTitle}/>
                 <IconButton aria-label="delete" onClick={removeTodolist}>
