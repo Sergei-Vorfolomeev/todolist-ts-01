@@ -3,8 +3,8 @@ import {Dispatch} from "redux";
 import {TaskModelAPIType, TaskPriorities, TaskResponseType, tasksAPI, TaskStatuses} from "../api/tasks-api";
 import {TasksStateType} from "../components/TaskWithRedux";
 import {AppRootStateType} from "./store";
-import {AppActionsType, setAppStatusAC, setErrorAC} from "./appReducer";
-import {handleServerNetworkError} from "../utils/error-utils";
+import {setAppStatusAC, setErrorAC} from "./appReducer";
+import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 
 const initialState: TasksStateType = {}
 
@@ -113,7 +113,7 @@ export const setTasksTC = (todolistID: string) =>
         dispatch(setAppStatusAC('loading'))
         tasksAPI.getTasks(todolistID)
             .then(res => {
-                    dispatch(setTasksAC(res.items, todolistID))
+                    dispatch(setTasksAC(res.data.items, todolistID))
                     dispatch(setAppStatusAC('succeeded'))
                 }
             )
@@ -127,17 +127,11 @@ export const removeTaskTC = (todolistID: string, taskID: string) =>
         dispatch(setAppStatusAC('loading'))
         tasksAPI.deleteTask(todolistID, taskID)
             .then(res => {
-                if (res.resultCode === 0) {
+                if (res.data.resultCode === 0) {
                     dispatch(removeTaskAC(todolistID, taskID))
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
-                    if (res.messages.length) {
-                        dispatch(setErrorAC(res.messages[0]))
-                        dispatch(setAppStatusAC('failed'))
-                    } else {
-                        dispatch(setErrorAC('Some Error'))
-                        dispatch(setAppStatusAC('failed'))
-                    }
+                    handleServerAppError(dispatch, res.data)
                 }
             })
             .catch(e => {
@@ -150,17 +144,11 @@ export const addTaskTC = (todolistID: string, title: string) =>
         dispatch(setAppStatusAC('loading'))
         tasksAPI.addTask(todolistID, title)
             .then(res => {
-                if (res.resultCode === 0) {
-                    dispatch(addTaskAC(todolistID, res.data.item))
+                if (res.data.resultCode === 0) {
+                    dispatch(addTaskAC(todolistID, res.data.data.item))
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
-                    if (res.messages.length) {
-                        dispatch(setErrorAC(res.messages[0]))
-                        dispatch(setAppStatusAC('failed'))
-                    } else {
-                        dispatch(setErrorAC('Some Error'))
-                        dispatch(setAppStatusAC('failed'))
-                    }
+                    handleServerAppError<{item: TaskResponseType}>(dispatch, res.data)
                 }
             })
             .catch(e => {
@@ -197,17 +185,11 @@ export const updateTaskTC = (todolistID: string, taskID: string, domainModel: Ta
         }
         tasksAPI.updateTask(todolistID, taskID, apiModel)
             .then(res => {
-                if (res.resultCode === 0) {
+                if (res.data.resultCode === 0) {
                     dispatch(updateTaskAC(todolistID, taskID, apiModel))
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
-                    if (res.messages.length) {
-                        dispatch(setErrorAC(res.messages[0]))
-                        dispatch(setAppStatusAC('failed'))
-                    } else {
-                        dispatch(setErrorAC('Some Error'))
-                        dispatch(setAppStatusAC('failed'))
-                    }
+                    handleServerAppError<{item: TaskResponseType}>(dispatch, res.data)
                 }
             })
             .catch(e => {

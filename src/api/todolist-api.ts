@@ -26,19 +26,19 @@ const instance = axios.create({
 export const todolistAPI = {
     getTodolists () {
         return instance.get<TodolistResponseType[]>('/todo-lists')
-            .then( res => res.data )
+            .then( res => res)
     },
     createTodolist (title: string) {
         return  instance.post<ResponseType<{item: TodolistResponseType}>>('/todo-lists', {title: title})
-            .then(res => res.data)
+            .then(res => res)
     },
     deleteTodolist (todolistId: string) {
         return instance.delete<ResponseType>(`/todo-lists/${todolistId}`)
-            .then(res => res.data)
+            .then(res => res)
     },
     updateTodolist (todolistId: string, title: string) {
         return instance.put<ResponseType>(`/todo-lists/${todolistId}`, {title: title})
-            .then(res => res.data)
+            .then(res => res)
     },
 }
 

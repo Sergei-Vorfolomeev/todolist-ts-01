@@ -60,20 +60,20 @@ export type TaskModelAPIType = {
 export const tasksAPI = {
     getTasks(todolistId: string) {
         return instance.get<GetTasksResponseType>(`/todo-lists/${todolistId}/tasks`)
-            .then(res => res.data)
+            .then(res => res)
     },
     addTask(todolistId: string, title: string) {
         return instance.post<ResponseType<{item: TaskResponseType}>>(`/todo-lists/${todolistId}/tasks`, {title})
-            .then(res => res.data)
+            .then(res => res)
     },
     deleteTask(todolistId: string, taskId: string) {
         return instance.delete<ResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
-            .then(res => res.data)
+            .then(res => res)
     },
 
     updateTask(todolistId: string, taskId: string, model: TaskModelAPIType) {
         return instance.put<ResponseType<{item: TaskResponseType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
-            .then(res => res.data)
+            .then(res => res)
     },
 }
 
