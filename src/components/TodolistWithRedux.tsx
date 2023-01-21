@@ -22,7 +22,7 @@ type TodolistWithReduxPropsType = {
 }
 
 export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) => {
-    const {id, title, filter} = todolist
+    const {id, title, filter, entityStatus} = todolist
     let tasks = useAppSelector<TaskResponseType[]>(state => state.tasks[id])
     const dispatch = useAppDispatch()
 
@@ -66,7 +66,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
         <div className='todolist'>
             <h3>
                 <EditableSpan title={title} changeTitle={changeTodolistTitle}/>
-                <IconButton aria-label="delete" onClick={removeTodolist}>
+                <IconButton aria-label="delete" onClick={removeTodolist} disabled={entityStatus === 'loading'}>
                     <Delete/>
                 </IconButton>
             </h3>
