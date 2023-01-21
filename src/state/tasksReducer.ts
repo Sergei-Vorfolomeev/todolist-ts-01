@@ -105,7 +105,7 @@ export const setTasksAC = (tasks: TaskResponseType[], todolistID: string) => {
 }
 
 
-// thunks
+// THUNKS
 
 export const setTasksTC = (todolistID: string) =>
     (dispatch: Dispatch) => {
@@ -116,6 +116,10 @@ export const setTasksTC = (todolistID: string) =>
                     dispatch(setAppStatusAC('succeeded'))
                 }
             )
+            .catch(e => {
+                dispatch(setAppStatusAC('failed'))
+                dispatch(setErrorAC(e.message))
+            })
     }
 
 export const removeTaskTC = (todolistID: string, taskID: string) =>
@@ -123,8 +127,22 @@ export const removeTaskTC = (todolistID: string, taskID: string) =>
         dispatch(setAppStatusAC('loading'))
         tasksAPI.deleteTask(todolistID, taskID)
             .then(res => {
-                dispatch(removeTaskAC(todolistID, taskID))
-                dispatch(setAppStatusAC('succeeded'))
+                if (res.resultCode === 0) {
+                    dispatch(removeTaskAC(todolistID, taskID))
+                    dispatch(setAppStatusAC('succeeded'))
+                } else {
+                    if (res.messages.length) {
+                        dispatch(setErrorAC(res.messages[0]))
+                        dispatch(setAppStatusAC('failed'))
+                    } else {
+                        dispatch(setErrorAC('Some Error'))
+                        dispatch(setAppStatusAC('failed'))
+                    }
+                }
+            })
+            .catch(e => {
+                dispatch(setErrorAC(e.message))
+                dispatch(setAppStatusAC('failed'))
             })
     }
 
@@ -137,9 +155,18 @@ export const addTaskTC = (todolistID: string, title: string) =>
                     dispatch(addTaskAC(todolistID, res.data.item))
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
-                    dispatch(setErrorAC(res.messages[0]))
-                    dispatch(setAppStatusAC('succeeded'))
+                    if (res.messages.length) {
+                        dispatch(setErrorAC(res.messages[0]))
+                        dispatch(setAppStatusAC('failed'))
+                    } else {
+                        dispatch(setErrorAC('Some Error'))
+                        dispatch(setAppStatusAC('failed'))
+                    }
                 }
+            })
+            .catch(e => {
+                dispatch(setErrorAC(e.message))
+                dispatch(setAppStatusAC('failed'))
             })
     }
 
@@ -172,7 +199,21 @@ export const updateTaskTC = (todolistID: string, taskID: string, domainModel: Ta
         }
         tasksAPI.updateTask(todolistID, taskID, apiModel)
             .then(res => {
-                dispatch(updateTaskAC(todolistID, taskID, apiModel))
-                dispatch(setAppStatusAC('succeeded'))
+                if (res.resultCode === 0) {
+                    dispatch(updateTaskAC(todolistID, taskID, apiModel))
+                    dispatch(setAppStatusAC('succeeded'))
+                } else {
+                    if (res.messages.length) {
+                        dispatch(setErrorAC(res.messages[0]))
+                        dispatch(setAppStatusAC('failed'))
+                    } else {
+                        dispatch(setErrorAC('Some Error'))
+                        dispatch(setAppStatusAC('failed'))
+                    }
+                }
+            })
+            .catch(e => {
+                dispatch(setErrorAC(e.message))
+                dispatch(setAppStatusAC('failed'))
             })
     }

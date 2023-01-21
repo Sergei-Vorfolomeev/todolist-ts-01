@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 type InputCompPropsType = {
     callBack: (newTitle: string) => void
     label: string
+    disabled?: boolean
 }
 
 export const InputComp = memo((props: InputCompPropsType) => {
@@ -40,11 +41,13 @@ export const InputComp = memo((props: InputCompPropsType) => {
                 onChange={onChangeInputHandler}
                 error={!!error}
                 onKeyDown={onEnterHandler}
+                disabled={props.disabled}
             />
             <Button
                 variant="contained"
                 style={{maxWidth: '40px', minWidth: '40px', maxHeight: '40px', minHeight: '40px', background: 'purple'}}
-                onClick={addTaskHandler}>
+                onClick={addTaskHandler}
+                disabled={props.disabled}>
                 +
             </Button>
         </div>

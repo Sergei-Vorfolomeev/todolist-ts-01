@@ -72,7 +72,8 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
             </h3>
             <div>
                 <InputComp callBack={(newTitle) => addTask(newTitle)}
-                           label={'Type new task'}/>
+                           label={'Type new task'}
+                           disabled={entityStatus === 'loading'}/>
             </div>
             <ul>
                 {tasks.map((el) => {

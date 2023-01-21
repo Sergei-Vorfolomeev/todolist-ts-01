@@ -108,14 +108,28 @@ export const setTodolistsTC = () => (dispatch: Dispatch) => {
             dispatch(setTodolistsAC(res))
             dispatch(dispatch(setAppStatusAC('succeeded')))
         })
+        .catch(e => {
+            dispatch(setErrorAC(e.message))
+            dispatch(setAppStatusAC('failed'))
+        })
 }
 export const removeTodolistTC = (todolistID: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
     dispatch(changeEntityStatusAC(todolistID, 'loading'))
     todolistAPI.deleteTodolist(todolistID)
         .then(res => {
-            dispatch(removeTodolistAC(todolistID))
-            dispatch(setAppStatusAC('succeeded'))
+            if (res.resultCode === 0) {
+                dispatch(removeTodolistAC(todolistID))
+                dispatch(setAppStatusAC('succeeded'))
+            } else {
+                if (res.messages.length) {
+                    dispatch(setErrorAC(res.messages[0]))
+                    dispatch(setAppStatusAC('failed'))
+                } else {
+                    dispatch(setErrorAC('Some Error'))
+                    dispatch(setAppStatusAC('failed'))
+                }
+            }
         })
         .catch(e => {
             dispatch(setAppStatusAC('failed'))
@@ -131,16 +145,39 @@ export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
                 dispatch(addTodolistAC(res.data.item))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                dispatch(setErrorAC(res.messages[0]))
-                dispatch(setAppStatusAC('succeeded'))
+                if (res.messages.length) {
+                    dispatch(setErrorAC(res.messages[0]))
+                    dispatch(setAppStatusAC('failed'))
+                } else {
+                    dispatch(setErrorAC('Some Error'))
+                    dispatch(setAppStatusAC('failed'))
+                }
             }
+        })
+        .catch(e => {
+            dispatch(setAppStatusAC('failed'))
+            dispatch(setErrorAC(e.message))
         })
 }
 export const changeTodolistTitleTC = (todolistID: string, title: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
     todolistAPI.updateTodolist(todolistID, title)
         .then(res => {
-            dispatch(changeTodolistTitleAC(todolistID, title))
-            dispatch(setAppStatusAC('succeeded'))
+            if (res.resultCode === 0) {
+                dispatch(changeTodolistTitleAC(todolistID, title))
+                dispatch(setAppStatusAC('succeeded'))
+            } else {
+                if (res.messages.length) {
+                    dispatch(setErrorAC(res.messages[0]))
+                    dispatch(setAppStatusAC('failed'))
+                } else {
+                    dispatch(setErrorAC('Some Error'))
+                    dispatch(setAppStatusAC('failed'))
+                }
+            }
+        })
+        .catch(e => {
+            dispatch(setAppStatusAC('failed'))
+            dispatch(setErrorAC(e.message))
         })
 }
