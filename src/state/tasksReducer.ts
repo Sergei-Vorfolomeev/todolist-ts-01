@@ -4,6 +4,7 @@ import {TaskModelAPIType, TaskPriorities, TaskResponseType, tasksAPI, TaskStatus
 import {TasksStateType} from "../components/TaskWithRedux";
 import {AppRootStateType} from "./store";
 import {AppActionsType, setAppStatusAC, setErrorAC} from "./appReducer";
+import {handleServerNetworkError} from "../utils/error-utils";
 
 const initialState: TasksStateType = {}
 
@@ -117,8 +118,7 @@ export const setTasksTC = (todolistID: string) =>
                 }
             )
             .catch(e => {
-                dispatch(setAppStatusAC('failed'))
-                dispatch(setErrorAC(e.message))
+                handleServerNetworkError(dispatch, e.message)
             })
     }
 
@@ -141,8 +141,7 @@ export const removeTaskTC = (todolistID: string, taskID: string) =>
                 }
             })
             .catch(e => {
-                dispatch(setErrorAC(e.message))
-                dispatch(setAppStatusAC('failed'))
+                handleServerNetworkError(dispatch, e.message)
             })
     }
 
@@ -165,8 +164,7 @@ export const addTaskTC = (todolistID: string, title: string) =>
                 }
             })
             .catch(e => {
-                dispatch(setErrorAC(e.message))
-                dispatch(setAppStatusAC('failed'))
+                handleServerNetworkError(dispatch, e.message)
             })
     }
 
@@ -213,7 +211,6 @@ export const updateTaskTC = (todolistID: string, taskID: string, domainModel: Ta
                 }
             })
             .catch(e => {
-                dispatch(setErrorAC(e.message))
-                dispatch(setAppStatusAC('failed'))
+                handleServerNetworkError(dispatch, e.message)
             })
     }
