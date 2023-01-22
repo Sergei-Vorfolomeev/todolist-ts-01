@@ -137,6 +137,8 @@ export const removeTodolistTC = (todolistID: string) =>
                 dispatch(setAppStatusAC('succeeded'))
             } else {
                 handleServerAppError(dispatch, res.data)
+                dispatch(setAppStatusAC('failed'))
+
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {

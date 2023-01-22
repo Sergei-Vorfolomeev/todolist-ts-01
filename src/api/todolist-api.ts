@@ -1,5 +1,4 @@
 import axios from "axios";
-import {TaskStatuses} from "./tasks-api";
 
 
 export type TodolistResponseType = {

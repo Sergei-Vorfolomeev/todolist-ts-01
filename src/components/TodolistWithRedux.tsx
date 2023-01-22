@@ -13,7 +13,7 @@ import {
 } from "../state/todolistsReducer";
 import {addTaskTC, removeTaskTC, setTasksTC, updateTaskTC} from "../state/tasksReducer";
 import {ButtonWithMemo} from "./ButtonWithMemo";
-import {TaskResponseType, TaskStatuses} from "../api/tasks-api";
+import {TaskDomainType, TaskStatuses} from "../api/tasks-api";
 import {Task} from "./Task";
 import {EditableSpan} from "./EditableSpan";
 
@@ -23,7 +23,7 @@ type TodolistWithReduxPropsType = {
 
 export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) => {
     const {id, title, filter, entityStatus} = todolist
-    let tasks = useAppSelector<TaskResponseType[]>(state => state.tasks[id])
+    let tasks = useAppSelector<TaskDomainType[]>(state => state.tasks[id])
     const dispatch = useAppDispatch()
 
     if (filter === 'active') {

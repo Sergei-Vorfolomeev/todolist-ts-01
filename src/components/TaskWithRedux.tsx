@@ -1,12 +1,13 @@
 import React, {memo} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {useAppDispatch, AppRootStateType} from "../state/store";
+import {useSelector} from "react-redux";
+import {AppRootStateType, useAppDispatch} from "../state/store";
 import Checkbox from "@mui/material/Checkbox";
 import {EditableSpan} from "./EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
-import {removeTaskAC, updateTaskAC, updateTaskTC} from "../state/tasksReducer";
-import {TaskResponseType, TaskStatuses} from "../api/tasks-api";
+import {removeTaskAC, updateTaskTC} from "../state/tasksReducer";
+import {TaskDomainType, TaskResponseType, TaskStatuses} from "../api/tasks-api";
+import {RequestStatusType} from "../state/appReducer";
 
 type TaskWithReduxPropsType = {
     todolistID: string
@@ -14,7 +15,8 @@ type TaskWithReduxPropsType = {
 }
 
 export type TasksStateType = {
-    [key: string]: TaskResponseType[]
+    [key: string]: TaskDomainType[]
+        //& {entityTaskStatus: RequestStatusType}
 }
 
 export const TaskWithRedux = memo(({todolistID, taskIndex}:TaskWithReduxPropsType) => {

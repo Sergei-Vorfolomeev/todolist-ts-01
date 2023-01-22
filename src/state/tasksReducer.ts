@@ -1,27 +1,32 @@
 import {AddTodolistACType, SetTodolistsACType} from "./todolistsReducer";
 import {Dispatch} from "redux";
-import {TaskModelAPIType, TaskPriorities, TaskResponseType, tasksAPI, TaskStatuses} from "../api/tasks-api";
+import {
+    TaskDomainType,
+    TaskModelAPIType,
+    TaskPriorities,
+    TaskResponseType,
+    tasksAPI,
+    TaskStatuses
+} from "../api/tasks-api";
 import {TasksStateType} from "../components/TaskWithRedux";
 import {AppRootStateType} from "./store";
-import {setAppStatusAC, setErrorAC} from "./appReducer";
+import {RequestStatusType, setAppStatusAC} from "./appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 
 const initialState: TasksStateType = {}
 
 export const tasksReducer = (state = initialState, action: GeneralACType): TasksStateType => {
     switch (action.type) {
-        case 'REMOVE-TASK': {
+        case 'REMOVE-TASK':
             return {
                 ...state,
                 [action.payload.todolistID]: state[action.payload.todolistID].filter(el => el.id !== action.payload.taskID)
             }
-        }
-        case "ADD-TASK": {
-            const newTask: TaskResponseType = action.payload.task
+        case "ADD-TASK":
+            const newTask: TaskDomainType = {...action.payload.task, entityTaskStatus: 'idle'}
             return {...state, [action.payload.todolistID]: [newTask, ...state[action.payload.todolistID]]}
-        }
-        case "UPDATE-TASK": {
+        case "UPDATE-TASK":
             return {
                 ...state,
                 [action.payload.todolistID]: state[action.payload.todolistID].map(el =>
@@ -30,26 +35,31 @@ export const tasksReducer = (state = initialState, action: GeneralACType): Tasks
                         : el
                 )
             }
-        }
-        case "ADD-TODOLIST": {
+        case "ADD-TODOLIST":
             return {...state, [action.payload.todolist.id]: []}
-        }
-        case "SET-TODOLISTS": {
+        case "SET-TODOLISTS":
             const copyState: TasksStateType = {...state}
             action.payload.todolists.forEach(el => copyState[el.id] = [])
             return copyState
-        }
-        case "SET-TASKS": {
+        case "SET-TASKS":
             return {
                 ...state,
-                [action.payload.todolistID]: action.payload.tasks
+                [action.payload.todolistID]: action.payload.tasks.map(el => ({...el, entityTaskStatus: 'idle'}))
             }
-        }
+        case "CHANGE-ENTITY-TASK-STATUS":
+            return {
+                ...state,
+                [action.payload.todolistID]: state[action.payload.todolistID].map(el =>
+                        el.id === action.payload.taskID
+                            ? {...el, entityTaskStatus: action.payload.entityTaskStatus}
+                            : el)
+            }
         default:
             return state
     }
 }
 
+// ACTIONS
 
 export const removeTaskAC = (todolistID: string, taskID: string) => {
     return {
@@ -94,6 +104,15 @@ export const setTasksAC = (tasks: TaskResponseType[], todolistID: string) => {
     } as const
 }
 
+export const changeEntityTaskStatusAC = (todolistID: string, taskID: string, entityTaskStatus: RequestStatusType) => {
+    return {
+        type: 'CHANGE-ENTITY-TASK-STATUS',
+        payload: {
+            todolistID, taskID, entityTaskStatus
+        }
+    } as const
+}
+
 
 // THUNKS
 
@@ -113,32 +132,41 @@ export const setTasksTC = (todolistID: string) =>
             }
         }
         // .then(res => {
-            //         dispatch(setTasksAC(res.data.items, todolistID))
-            //         dispatch(setAppStatusAC('succeeded'))
-            //     }
-            // )
-            // .catch(e => {
-            //     handleServerNetworkError(dispatch, e.message)
-            // })
+        //         dispatch(setTasksAC(res.data.items, todolistID))
+        //         dispatch(setAppStatusAC('succeeded'))
+        //     }
+        // )
+        // .catch(e => {
+        //     handleServerNetworkError(dispatch, e.message)
+        // })
     }
 
 export const removeTaskTC = (todolistID: string, taskID: string) =>
     async (dispatch: Dispatch) => {
         dispatch(setAppStatusAC('loading'))
+        dispatch(changeEntityTaskStatusAC(todolistID, taskID, 'loading'))
         try {
             const res = await tasksAPI.deleteTask(todolistID, taskID)
             if (res.data.resultCode === 0) {
                 dispatch(removeTaskAC(todolistID, taskID))
                 dispatch(setAppStatusAC('succeeded'))
+                dispatch(changeEntityTaskStatusAC(todolistID, taskID, 'succeeded'))
+
             } else {
                 handleServerAppError(dispatch, res.data)
+                dispatch(changeEntityTaskStatusAC(todolistID, taskID, 'failed'))
+
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {
                 const error = e.response?.data ? e.response?.data.message : e.message
                 handleServerNetworkError(dispatch, error)
+                dispatch(changeEntityTaskStatusAC(todolistID, taskID, 'failed'))
+
             } else {
                 handleServerNetworkError(dispatch, 'Some Error')
+                dispatch(changeEntityTaskStatusAC(todolistID, taskID, 'failed'))
+
             }
         }
         // .then(res => {
@@ -173,18 +201,18 @@ export const addTaskTC = (todolistID: string, title: string) =>
                 handleServerNetworkError(dispatch, 'Some Error')
             }
         }
-            // .then(res => {
-            //     if (res.data.resultCode === 0) {
-            //         dispatch(addTaskAC(todolistID, res.data.data.item))
-            //         dispatch(setAppStatusAC('succeeded'))
-            //     } else {
-            //         handleServerAppError<{ item: TaskResponseType }>(dispatch, res.data)
-            //     }
-            // })
-            // .catch((e: AxiosError<ErrorType>) => {
-            //     const error = e.response?.data ? e.response?.data.message : e.message
-            //     handleServerNetworkError(dispatch, error)
-            // })
+        // .then(res => {
+        //     if (res.data.resultCode === 0) {
+        //         dispatch(addTaskAC(todolistID, res.data.data.item))
+        //         dispatch(setAppStatusAC('succeeded'))
+        //     } else {
+        //         handleServerAppError<{ item: TaskResponseType }>(dispatch, res.data)
+        //     }
+        // })
+        // .catch((e: AxiosError<ErrorType>) => {
+        //     const error = e.response?.data ? e.response?.data.message : e.message
+        //     handleServerNetworkError(dispatch, error)
+        // })
     }
 
 
@@ -243,11 +271,13 @@ type GeneralACType = RemoveTaskACType
     | AddTodolistACType
     | SetTodolistsACType
     | SetTasksACType
+    | ChangeEntityTaskStatusACType
 // | AppActionsType
 type RemoveTaskACType = ReturnType<typeof removeTaskAC>
 type AddTaskACType = ReturnType<typeof addTaskAC>
 type updateTaskACType = ReturnType<typeof updateTaskAC>
 type SetTasksACType = ReturnType<typeof setTasksAC>
+type ChangeEntityTaskStatusACType = ReturnType<typeof changeEntityTaskStatusAC>
 // type addTasksInTodolistACType = ReturnType<typeof addTasksInTodolistAC>
 
 
