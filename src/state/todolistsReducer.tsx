@@ -2,6 +2,8 @@ import {todolistAPI, TodolistResponseType} from "../api/todolist-api";
 import {Dispatch} from "redux";
 import {RequestStatusType, setAppStatusAC} from "./appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
+import axios from "axios";
+import {ErrorType} from "./tasksReducer";
 
 export type TodolistsDomainType = TodolistResponseType & {
     filter: FilterType,
@@ -33,7 +35,10 @@ export const todolistsReducer = (state: TodolistsDomainType[] = initialState, ac
                     ? {...el, title: action.payload.title}
                     : el)
         case "CHANGE-ENTITY-STATUS":
-            return state.map(el => el.id === action.payload.todolistID ? {...el, entityStatus: action.payload.entityStatus} : el)
+            return state.map(el => el.id === action.payload.todolistID ? {
+                ...el,
+                entityStatus: action.payload.entityStatus
+            } : el)
         default:
             return state
     }
@@ -105,61 +110,105 @@ export const changeEntityStatusAC = (todolistID: string, entityStatus: RequestSt
 
 
 // THUNKS
-export const setTodolistsTC = () => (dispatch: Dispatch) => {
+export const setTodolistsTC = () =>
+    async (dispatch: Dispatch) => {
     dispatch(setAppStatusAC('loading'))
-    todolistAPI.getTodolists()
-        .then(res => {
+        try {
+        const res = await todolistAPI.getTodolists()
             dispatch(setTodolistsAC(res.data))
             dispatch(dispatch(setAppStatusAC('succeeded')))
-        })
-        .catch(e => {
-            handleServerNetworkError(dispatch, e.message)
-        })
+        } catch(e) {
+            if (axios.isAxiosError<ErrorType>(e)) {
+                const error = e.response?.data ? e.response?.data.message : e.message
+                handleServerNetworkError(dispatch, error)
+            } else {
+                handleServerNetworkError(dispatch, 'Some Error')
+            }
+        }
 }
-export const removeTodolistTC = (todolistID: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'))
-    dispatch(changeEntityStatusAC(todolistID, 'loading'))
-    todolistAPI.deleteTodolist(todolistID)
-        .then(res => {
+export const removeTodolistTC = (todolistID: string) =>
+    async (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
+        dispatch(changeEntityStatusAC(todolistID, 'loading'))
+        try {
+            const res = await todolistAPI.deleteTodolist(todolistID)
             if (res.data.resultCode === 0) {
                 dispatch(removeTodolistAC(todolistID))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
                 handleServerAppError(dispatch, res.data)
             }
-        })
-        .catch(e => {
-            handleServerNetworkError(dispatch, e.message)
-            dispatch(changeEntityStatusAC(todolistID, 'failed'))
-        })
-}
-export const addTodolistTC = (title: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'))
-    todolistAPI.createTodolist(title)
-        .then(res => {
+        } catch (e) {
+            if (axios.isAxiosError<ErrorType>(e)) {
+                const error = e.response?.data ? e.response?.data.message : e.message
+                handleServerNetworkError(dispatch, error)
+                dispatch(changeEntityStatusAC(todolistID, 'failed'))
+            } else {
+                handleServerNetworkError(dispatch, 'Some Error')
+                dispatch(changeEntityStatusAC(todolistID, 'failed'))
+            }
+        }
+        // .then(res => {
+        //     if (res.data.resultCode === 0) {
+        //         dispatch(removeTodolistAC(todolistID))
+        //         dispatch(setAppStatusAC('succeeded'))
+        //     } else {
+        //         handleServerAppError(dispatch, res.data)
+        //     }
+        // })
+        // .catch(e => {
+        //     handleServerNetworkError(dispatch, e.message)
+        //     dispatch(changeEntityStatusAC(todolistID, 'failed'))
+        // })
+    }
+export const addTodolistTC = (title: string) =>
+    async (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
+        try {
+            const res = await todolistAPI.createTodolist(title)
             if (res.data.resultCode === 0) {
                 dispatch(addTodolistAC(res.data.data.item))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                handleServerAppError<{item: TodolistResponseType}>(dispatch, res.data)
+                handleServerAppError<{ item: TodolistResponseType }>(dispatch, res.data)
             }
-        })
-        .catch(e => {
-            handleServerNetworkError(dispatch, e.message)
-        })
-}
-export const changeTodolistTitleTC = (todolistID: string, title: string) => (dispatch: Dispatch) => {
-    dispatch(setAppStatusAC('loading'))
-    todolistAPI.updateTodolist(todolistID, title)
-        .then(res => {
+        } catch (e) {
+            if (axios.isAxiosError<ErrorType>(e)) {
+                const error = e.response?.data ? e.response?.data.message : e.message
+                handleServerNetworkError(dispatch, error)
+            } else {
+                handleServerNetworkError(dispatch, 'Some Error')
+            }
+        }
+        // .then(res => {
+        //     if (res.data.resultCode === 0) {
+        //         dispatch(addTodolistAC(res.data.data.item))
+        //         dispatch(setAppStatusAC('succeeded'))
+        //     } else {
+        //         handleServerAppError<{item: TodolistResponseType}>(dispatch, res.data)
+        //     }
+        // })
+        // .catch(e => {
+        //     handleServerNetworkError(dispatch, e.message)
+        // })
+    }
+export const changeTodolistTitleTC = (todolistID: string, title: string) =>
+    async (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
+        try {
+            const res = await todolistAPI.updateTodolist(todolistID, title)
             if (res.data.resultCode === 0) {
                 dispatch(changeTodolistTitleAC(todolistID, title))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
                 handleServerAppError(dispatch, res.data)
             }
-        })
-        .catch(e => {
-            handleServerNetworkError(dispatch, e.message)
-        })
-}
+        } catch (e) {
+            if (axios.isAxiosError<ErrorType>(e)) {
+                const error = e.response?.data ? e.response?.data.message : e.message
+                handleServerNetworkError(dispatch, error)
+            } else {
+                handleServerNetworkError(dispatch, 'Some Error')
+            }
+        }
+    }

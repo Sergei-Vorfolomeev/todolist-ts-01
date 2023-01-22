@@ -260,6 +260,6 @@ export type TaskModelDomainType = {
     deadline?: string,
 }
 
-type ErrorType = {
+export type ErrorType = {
     message: string
 }
