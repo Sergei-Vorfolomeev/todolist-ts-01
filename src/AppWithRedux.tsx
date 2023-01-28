@@ -1,10 +1,7 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
-import {InputComp} from "./components/InputComp";
-import {addTodolistTC, setTodolistsTC, TodolistsDomainType} from "./state/todolistsReducer";
-import {useSelector} from "react-redux";
-import {useAppDispatch, AppRootStateType, useAppSelector} from "./state/store";
-import {TodolistWithRedux} from "./components/TodolistWithRedux";
+import {setTodolistsTC} from "./state/todolistsReducer";
+import {useAppDispatch, useAppSelector} from "./state/store";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,23 +11,19 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {RequestStatusType} from "./state/appReducer";
-import {ErrorSnackBar} from "./components/SnackBar";
+import {TodolistsList} from "./components/TodolistsList";
+import {Navigate, NavLink, Route, Routes} from "react-router-dom";
+import {Login} from "./components/Login";
+import {ErrorPage404} from "./components/404";
 
 function AppWithRedux() {
 
-    let todolists = useSelector<AppRootStateType, Array<TodolistsDomainType>>(state => state.todolists);
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
-    const error = useAppSelector<null | string>(state => state.app.error)
-
     const dispatch = useAppDispatch()
-
-    const addTodolist = useCallback((newTitle: string) => {
-        dispatch(addTodolistTC(newTitle))
-    }, [dispatch])
 
     useEffect(() => {
         dispatch(setTodolistsTC())
-    }, [])
+    }, [dispatch])
 
     return (
         <div className="App">
@@ -50,27 +43,21 @@ function AppWithRedux() {
                             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                                 News
                             </Typography>
-                            <Button color="inherit">Login</Button>
+                            <NavLink to='/login' >
+                                <Button color="inherit" style={{color: 'white'}}>Login</Button>
+                            </NavLink>
                         </Toolbar>
                         {status === 'loading' && <LinearProgress color="secondary"/>}
                     </AppBar>
                 </Box>
             </div>
-            <div className="todolists">
-                <div className="inputComp">
-                    <InputComp callBack={addTodolist}
-                               label={'Type new title'}/>
-                </div>
-                {todolists.map(el => {
-                    return (
-                        <TodolistWithRedux
-                            key={el.id}
-                            todolist={el}
-                        />
-                    )
-                })}
-                {error && <ErrorSnackBar error={error}/>}
-            </div>
+            <Routes>
+                <Route path={'/'} element={<TodolistsList/>}/>
+                <Route path={'/login'} element={<Login/>}/>
+                <Route path={'/404'} element={<ErrorPage404/>}/>
+                <Route path={'*'} element={<Navigate to={'/404'}/>}/>
+            </Routes>
+
         </div>
     );
 }
