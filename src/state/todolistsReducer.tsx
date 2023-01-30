@@ -1,6 +1,6 @@
 import {todolistAPI, TodolistResponseType} from "../api/todolist-api";
 import {Dispatch} from "redux";
-import {RequestStatusType, setAppStatusAC} from "./appReducer";
+import {RequestStatusType, setAppStatusAC, setErrorAC} from "./appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 import axios from "axios";
 import {ErrorType} from "./tasksReducer";
@@ -115,8 +115,8 @@ export const setTodolistsTC = () =>
     dispatch(setAppStatusAC('loading'))
         try {
         const res = await todolistAPI.getTodolists()
-            dispatch(setTodolistsAC(res.data))
-            dispatch(dispatch(setAppStatusAC('succeeded')))
+                dispatch(setTodolistsAC(res.data))
+                dispatch(dispatch(setAppStatusAC('succeeded')))
         } catch(e) {
             if (axios.isAxiosError<ErrorType>(e)) {
                 const error = e.response?.data ? e.response?.data.message : e.message
@@ -168,11 +168,11 @@ export const addTodolistTC = (title: string) =>
         dispatch(setAppStatusAC('loading'))
         try {
             const res = await todolistAPI.createTodolist(title)
-            if (res.data.resultCode === 0) {
-                dispatch(addTodolistAC(res.data.data.item))
+            if (res.data.data.resultCode === 0) {
+                dispatch(addTodolistAC(res.data.data.data.item))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                handleServerAppError<{ item: TodolistResponseType }>(dispatch, res.data)
+                handleServerAppError<{ item: TodolistResponseType }>(dispatch, res.data.data)
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {
@@ -199,11 +199,11 @@ export const changeTodolistTitleTC = (todolistID: string, title: string) =>
         dispatch(setAppStatusAC('loading'))
         try {
             const res = await todolistAPI.updateTodolist(todolistID, title)
-            if (res.data.resultCode === 0) {
+            if (res.data.data.resultCode === 0) {
                 dispatch(changeTodolistTitleAC(todolistID, title))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                handleServerAppError(dispatch, res.data)
+                handleServerAppError(dispatch, res.data.data)
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {

@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
-import {authAPI, LoginType} from "../api/auth-api";
-import {setAppStatusAC} from "./appReducer";
+import {authAPI, LoginType, UserType} from "../api/auth-api";
+import {initializeAppAC, setAppStatusAC} from "./appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 import axios from "axios";
 import {ErrorType} from "./tasksReducer";
@@ -36,11 +36,11 @@ export const setIsLoggedInTC = (data: LoginType) =>
         dispatch(setAppStatusAC('loading'))
         try {
             const res = await authAPI.login(data)
-            if (res.data.resultCode === 0) {
+            if (res.data.data.resultCode === 0) {
                 dispatch(setIsLoggedInAC(true))
                 dispatch(setAppStatusAC('succeeded'))
             } else  {
-                handleServerAppError<{userId: number}>(dispatch, res.data)
+                handleServerAppError<{userId: number}>(dispatch, res.data.data)
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {
@@ -51,7 +51,27 @@ export const setIsLoggedInTC = (data: LoginType) =>
             }
         }
     }
-
+export const meTC = () =>
+    async (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
+        try {
+            const res = await authAPI.me()
+            if (res.data.resultCode === 0) {
+                dispatch(setIsLoggedInAC(true))
+                dispatch(setAppStatusAC('succeeded'))
+                dispatch(initializeAppAC(true))
+            } else  {
+                handleServerAppError<UserType>(dispatch, res.data)
+            }
+        } catch (e) {
+            if (axios.isAxiosError<ErrorType>(e)) {
+                const error = e.response?.data ? e.response?.data.message : e.message
+                handleServerNetworkError(dispatch, error)
+            } else {
+                handleServerNetworkError(dispatch, 'Some Error')
+            }
+        }
+    }
 // types
 type ActionsType = SetIsLoggedInACType
 type SetIsLoggedInACType = ReturnType<typeof setIsLoggedInAC>

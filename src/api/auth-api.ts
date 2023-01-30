@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import {ResponseType} from "./todolist-api";
 
 const instance = axios.create({
@@ -15,10 +15,17 @@ export type LoginType = {
     rememberMe?: boolean
     captcha?: string
 }
+export type UserType = {
+    id: number,
+    email: string,
+    login: string
+}
 
 export const authAPI = {
     login (data: LoginType) {
-        return instance.post<ResponseType<{userId: number}>>('/auth/login', data)
-            // .then(res => res)
+        return instance.post<AxiosResponse<ResponseType<{userId: number}>>>('/auth/login', data)
+    },
+    me () {
+        return instance.get<ResponseType<UserType>>('/auth/me')
     }
 }

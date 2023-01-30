@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import {setTodolistsTC} from "./state/todolistsReducer";
 import {useAppDispatch, useAppSelector} from "./state/store";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from '@mui/material/AppBar';
@@ -15,15 +14,26 @@ import {TodolistsList} from "./components/TodolistsList";
 import {Navigate, NavLink, Route, Routes} from "react-router-dom";
 import {Login} from "./components/Login";
 import {ErrorPage404} from "./components/404";
+import {meTC} from "./state/authReducer";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function AppWithRedux() {
 
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
+    const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(setTodolistsTC())
-    }, [dispatch])
+        dispatch(meTC())
+    }, [])
+
+    if (!isInitialized) {
+        return (
+        <div style={{position: 'fixed', width: '100%', textAlign: 'center', top: '45%' }}>
+            <CircularProgress />
+        </div>
+        )
+    }
 
     return (
         <div className="App">

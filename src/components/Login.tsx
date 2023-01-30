@@ -11,6 +11,7 @@ import {useFormik} from "formik";
 import {setIsLoggedInTC} from "../state/authReducer";
 import {useAppDispatch, useAppSelector} from "../state/store";
 import {Navigate} from "react-router-dom";
+import {ErrorSnackBar} from "./SnackBar";
 
 type FormikErrorType = {
     email?: string
@@ -19,6 +20,7 @@ type FormikErrorType = {
 
 export const Login = () => {
 
+    const error = useAppSelector<null | string>(state => state.app.error)
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
@@ -47,7 +49,6 @@ export const Login = () => {
             formik.resetForm()
         },
     });
-
     if (isLoggedIn) {
         return <Navigate to='/'/>
     }
@@ -92,6 +93,7 @@ export const Login = () => {
                     </FormGroup>
                 </form>
             </FormControl>
+            {error && <ErrorSnackBar error={error}/>}
         </Grid>
     </Grid>
 }

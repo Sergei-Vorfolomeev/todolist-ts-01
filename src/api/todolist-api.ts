@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 
 
 export type TodolistResponseType = {
@@ -28,7 +28,7 @@ export const todolistAPI = {
             .then( res => res)
     },
     createTodolist (title: string) {
-        return  instance.post<ResponseType<{item: TodolistResponseType}>>('/todo-lists', {title: title})
+        return  instance.post<AxiosResponse<ResponseType<{item: TodolistResponseType}>>>('/todo-lists', {title: title})
             .then(res => res)
     },
     deleteTodolist (todolistId: string) {
@@ -36,7 +36,7 @@ export const todolistAPI = {
             .then(res => res)
     },
     updateTodolist (todolistId: string, title: string) {
-        return instance.put<ResponseType>(`/todo-lists/${todolistId}`, {title: title})
+        return instance.put<AxiosResponse<ResponseType>>(`/todo-lists/${todolistId}`, {title: title})
             .then(res => res)
     },
 }

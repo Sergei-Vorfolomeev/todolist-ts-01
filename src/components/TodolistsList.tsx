@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {InputComp} from "./InputComp";
 import {TodolistWithRedux} from "./TodolistWithRedux";
 import {ErrorSnackBar} from "./SnackBar";
 import {useAppDispatch, useAppSelector} from "../state/store";
-import {addTodolistTC, TodolistsDomainType} from "../state/todolistsReducer";
+import {addTodolistTC, setTodolistsTC, TodolistsDomainType} from "../state/todolistsReducer";
 import {Navigate} from "react-router-dom";
 
 export const TodolistsList = () => {
@@ -12,6 +12,11 @@ export const TodolistsList = () => {
     const error = useAppSelector<null | string>(state => state.app.error)
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        if (!isLoggedIn) return
+        dispatch(setTodolistsTC())
+    }, [dispatch])
 
     const addTodolist = useCallback((newTitle: string) => {
         dispatch(addTodolistTC(newTitle))
