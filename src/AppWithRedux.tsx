@@ -14,18 +14,23 @@ import {TodolistsList} from "./components/TodolistsList";
 import {Navigate, NavLink, Route, Routes} from "react-router-dom";
 import {Login} from "./components/Login";
 import {ErrorPage404} from "./components/404";
-import {meTC} from "./state/authReducer";
+import {logoutTC, meTC} from "./state/authReducer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 function AppWithRedux() {
 
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
     const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized)
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         dispatch(meTC())
-    }, [])
+    }, [dispatch])
+
+    const logoutHandler = () => {
+        dispatch(logoutTC())
+    }
 
     if (!isInitialized) {
         return (
@@ -53,9 +58,10 @@ function AppWithRedux() {
                             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                                 News
                             </Typography>
-                            <NavLink to='/login' >
-                                <Button color="inherit" style={{color: 'white'}}>Login</Button>
+                            <NavLink to={'/login'}>
+                                {!isLoggedIn && <Button color="inherit" style={{color: 'white'}}>Log in</Button>}
                             </NavLink>
+                            {isLoggedIn && <Button color="inherit" style={{color: 'white'}} onClick={logoutHandler}>Log out</Button>}
                         </Toolbar>
                         {status === 'loading' && <LinearProgress color="secondary"/>}
                     </AppBar>

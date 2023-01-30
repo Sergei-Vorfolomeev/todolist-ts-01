@@ -23,9 +23,12 @@ export type UserType = {
 
 export const authAPI = {
     login (data: LoginType) {
-        return instance.post<AxiosResponse<ResponseType<{userId: number}>>>('/auth/login', data)
+        return instance.post<ResponseType<{userId: number}>>('/auth/login', data)
     },
     me () {
         return instance.get<ResponseType<UserType>>('/auth/me')
+    },
+    logout () {
+        return instance.delete<ResponseType>('/auth/login')
     }
 }

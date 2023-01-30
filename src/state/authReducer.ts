@@ -13,7 +13,7 @@ type InitialStateType = typeof initialState
 
 export const authReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
-        case 'login/ SET-IS-LOGGED-IN':
+        case 'login':
             return {...state, isLoggedIn: action.payload.value}
         default:
             return state
@@ -23,7 +23,7 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
 // actions
 const setIsLoggedInAC = (value: boolean) => {
     return {
-        type: 'login/ SET-IS-LOGGED-IN',
+        type: 'login',
         payload: {
             value
         }
@@ -31,22 +31,25 @@ const setIsLoggedInAC = (value: boolean) => {
 }
 
 // thunks
-export const setIsLoggedInTC = (data: LoginType) =>
+export const loginTC = (data: LoginType) =>
     async (dispatch: Dispatch) => {
         dispatch(setAppStatusAC('loading'))
         try {
             const res = await authAPI.login(data)
-            if (res.data.data.resultCode === 0) {
+            console.log(res.data.resultCode)
+            if (res.data.resultCode === 0) {
                 dispatch(setIsLoggedInAC(true))
                 dispatch(setAppStatusAC('succeeded'))
             } else  {
-                handleServerAppError<{userId: number}>(dispatch, res.data.data)
+                handleServerAppError<{userId: number}>(dispatch, res.data)
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {
+                debugger
                 const error = e.response?.data ? e.response?.data.message : e.message
                 handleServerNetworkError(dispatch, error)
             } else {
+                debugger
                 handleServerNetworkError(dispatch, 'Some Error')
             }
         }
@@ -59,7 +62,6 @@ export const meTC = () =>
             if (res.data.resultCode === 0) {
                 dispatch(setIsLoggedInAC(true))
                 dispatch(setAppStatusAC('succeeded'))
-                dispatch(initializeAppAC(true))
             } else  {
                 handleServerAppError<UserType>(dispatch, res.data)
             }
@@ -70,8 +72,32 @@ export const meTC = () =>
             } else {
                 handleServerNetworkError(dispatch, 'Some Error')
             }
+        } finally {
+            dispatch(initializeAppAC(true))
+        }
+
+    }
+export const logoutTC = () =>
+    async (dispatch: Dispatch) => {
+        dispatch(setAppStatusAC('loading'))
+        try {
+            const res = await authAPI.logout()
+            if (res.data.resultCode === 0) {
+                dispatch(setIsLoggedInAC(false))
+                dispatch(setAppStatusAC('succeeded'))
+            } else  {
+                handleServerAppError(dispatch, res.data)
+            }
+        } catch (e) {
+            if (axios.isAxiosError<ErrorType>(e)) {
+                const error = e.response?.data ? e.response?.data.message : e.message
+                handleServerNetworkError(dispatch, error)
+            } else {
+                handleServerNetworkError(dispatch, 'Some Error')
+            }
         }
     }
+
 // types
 type ActionsType = SetIsLoggedInACType
 type SetIsLoggedInACType = ReturnType<typeof setIsLoggedInAC>

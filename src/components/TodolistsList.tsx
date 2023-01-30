@@ -16,7 +16,7 @@ export const TodolistsList = () => {
     useEffect(() => {
         if (!isLoggedIn) return
         dispatch(setTodolistsTC())
-    }, [dispatch])
+    }, [dispatch, isLoggedIn])
 
     const addTodolist = useCallback((newTitle: string) => {
         dispatch(addTodolistTC(newTitle))
