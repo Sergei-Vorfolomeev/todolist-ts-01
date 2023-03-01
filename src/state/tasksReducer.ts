@@ -187,11 +187,11 @@ export const addTaskTC = (todolistID: string, title: string) =>
         dispatch(setAppStatusAC('loading'))
         try {
             const res = await tasksAPI.addTask(todolistID, title)
-            if (res.data.data.resultCode === 0) {
-                dispatch(addTaskAC(todolistID, res.data.data.data.item))
+            if (res.data.resultCode === 0) {
+                dispatch(addTaskAC(todolistID, res.data.data.item))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                handleServerAppError<{ item: TaskResponseType }>(dispatch, res.data.data)
+                handleServerAppError<{ item: TaskResponseType }>(dispatch, res.data)
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {
@@ -235,11 +235,11 @@ export const updateTaskTC = (todolistID: string, taskID: string, domainModel: Ta
         }
         try {
             const res = await tasksAPI.updateTask(todolistID, taskID, apiModel)
-            if (res.data.data.resultCode === 0) {
+            if (res.data.resultCode === 0) {
                 dispatch(updateTaskAC(todolistID, taskID, apiModel))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                handleServerAppError<{ item: TaskResponseType }>(dispatch, res.data.data)
+                handleServerAppError<{ item: TaskResponseType }>(dispatch, res.data)
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {

@@ -68,7 +68,7 @@ export const tasksAPI = {
             .then(res => res)
     },
     addTask(todolistId: string, title: string) {
-        return instance.post<AxiosResponse<ResponseType<{item: TaskResponseType}>>>(`/todo-lists/${todolistId}/tasks`, {title})
+        return instance.post<ResponseType<{item: TaskResponseType}>>(`/todo-lists/${todolistId}/tasks`, {title})
             .then(res => res)
     },
     deleteTask(todolistId: string, taskId: string) {
@@ -77,7 +77,7 @@ export const tasksAPI = {
     },
 
     updateTask(todolistId: string, taskId: string, model: TaskModelAPIType) {
-        return instance.put<AxiosResponse<ResponseType<{item: TaskResponseType}>>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
+        return instance.put<ResponseType<{item: TaskResponseType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
             .then(res => res)
     },
 }

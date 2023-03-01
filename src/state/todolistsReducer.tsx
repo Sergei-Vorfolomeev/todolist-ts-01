@@ -169,11 +169,11 @@ export const addTodolistTC = (title: string) =>
         try {
             const res = await todolistAPI.createTodolist(title)
             console.log(res)
-            if (res.data.data.resultCode === 0) {
-                dispatch(addTodolistAC(res.data.data.data.item))
+            if (res.data.resultCode === 0) {
+                dispatch(addTodolistAC(res.data.data.item))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                handleServerAppError<{ item: TodolistResponseType }>(dispatch, res.data.data)
+                handleServerAppError<{ item: TodolistResponseType }>(dispatch, res.data)
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {
@@ -200,11 +200,11 @@ export const changeTodolistTitleTC = (todolistID: string, title: string) =>
         dispatch(setAppStatusAC('loading'))
         try {
             const res = await todolistAPI.updateTodolist(todolistID, title)
-            if (res.data.data.resultCode === 0) {
+            if (res.data.resultCode === 0) {
                 dispatch(changeTodolistTitleAC(todolistID, title))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                handleServerAppError(dispatch, res.data.data)
+                handleServerAppError(dispatch, res.data)
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {

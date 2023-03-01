@@ -18,7 +18,7 @@ export const AddTask = () => {
     const [state, setState] = useState<ResponseType | null>(null)
     useEffect( () => {
         tasksAPI.addTask('9d420aae-1dec-4862-a526-c45925534f26', 'Sergey')
-            .then(res => setState(res.data.data))
+            .then(res => setState(res.data))
     }, [])
 
     return <div>{JSON.stringify(state)}</div>
@@ -46,7 +46,7 @@ export const UpdateTitleTask = () => {
                 startDate: '',
                 deadline: ''
             })
-            .then(res => setState(res.data.data))
+            .then(res => setState(res.data))
     }, [])
 
     return <div>{JSON.stringify(state)}</div>
