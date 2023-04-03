@@ -45,7 +45,6 @@ export const loginTC = (data: LoginType) =>
             }
         } catch (e) {
             if (axios.isAxiosError<ErrorType>(e)) {
-                debugger
                 const error = e.response?.data ? e.response?.data.message : e.message
                 handleServerNetworkError(dispatch, error)
             } else {
