@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from "axios";
+import axios from "axios";
 import {ResponseType} from "./todolist-api";
 
 const instance = axios.create({

@@ -60,7 +60,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
 
     useEffect(() => {
         dispatch(setTasksTC(id))
-    }, [])
+    }, [dispatch, id])
 
     return (
         <div className='todolist'>
