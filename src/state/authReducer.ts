@@ -5,6 +5,7 @@ import axios from "axios";
 import {ErrorType} from "./tasksReducer";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {appActions} from "state/appReducer";
+import {clearTodolistsAndTasks} from "common/actions/common.actions";
 
 const initialState = {
     isLoggedIn: false
@@ -94,6 +95,7 @@ export const logoutTC = () =>
             const res = await authAPI.logout()
             if (res.data.resultCode === 0) {
                 dispatch(authActions.setIsLoggedIn({value: false}))
+                dispatch(clearTodolistsAndTasks())
                 dispatch(appActions.setAppStatus({status: 'succeeded'}))
             } else  {
                 handleServerAppError(dispatch, res.data)

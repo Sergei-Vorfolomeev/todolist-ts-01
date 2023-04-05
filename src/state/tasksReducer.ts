@@ -14,6 +14,7 @@ import {handleServerAppError, handleServerNetworkError} from "utils/error-utils"
 import axios from "axios";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {todolistsActions} from "state/todolistsReducer";
+import {clearTodolistsAndTasks} from "common/actions/common.actions";
 
 const initialState: TasksStateType = {}
 
@@ -56,6 +57,9 @@ const slice = createSlice({
             action.payload.todolists.forEach(el => {
                 state[el.id] = []
             })
+        })
+        builder.addCase(clearTodolistsAndTasks, () => {
+            return {}
         })
     }
 })

@@ -5,6 +5,7 @@ import {handleServerAppError, handleServerNetworkError} from "utils/error-utils"
 import axios from "axios";
 import {ErrorType} from "./tasksReducer";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {clearTodolistsAndTasks} from "common/actions/common.actions";
 
 export type TodolistsDomainType = TodolistResponseType & {
     filter: FilterType,
@@ -41,6 +42,11 @@ const slice = createSlice({
             const index = state.findIndex(el => el.id === action.payload.todolistID)
             if (index !== -1) state[index].entityStatus = action.payload.entityStatus
         }
+    },
+    extraReducers: builder => {
+        builder.addCase(clearTodolistsAndTasks, () => {
+            return []
+        })
     }
 })
 
