@@ -15,6 +15,7 @@ import {ButtonWithMemo} from "components/common/Button/ButtonWithMemo";
 import {TaskDomainType, TaskStatuses} from "api/tasks-api";
 import {Task} from "components/Task/Task";
 import {EditableSpan} from "components/common/EditableSpan/EditableSpan";
+import {Paper} from "@mui/material";
 
 type TodolistWithReduxPropsType = {
     todolist: TodolistsDomainType
@@ -49,10 +50,10 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     }, [id, dispatch])
     const changeTaskTitle = useCallback((taskID: string, newTitle: string) => {
         dispatch(updateTaskTC(id, taskID, {title: newTitle}))
-    },[id, dispatch]);
+    }, [id, dispatch]);
     const removeTask = useCallback((taskID: string) => {
         dispatch(removeTaskTC(id, taskID))
-    },[id, dispatch]);
+    }, [id, dispatch]);
     const changeTodolistTitle = (newTitle: string) => {
         dispatch(changeTodolistTitleTC(id, newTitle))
     };
@@ -62,41 +63,44 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     }, [dispatch, id])
 
     return (
-        <div className='todolist'>
-            <h3>
-                <EditableSpan title={title} changeTitle={changeTodolistTitle}/>
-                <IconButton aria-label="delete" onClick={removeTodolist} disabled={entityStatus === 'loading'}>
-                    <Delete/>
-                </IconButton>
-            </h3>
-            <div>
-                <InputComp callBack={(newTitle) => addTask(newTitle)}
-                           label={'Type new task'}
-                           disabled={entityStatus === 'loading'}/>
+        <Paper elevation={5} style={{margin: '0 25px 25px 0'}}>
+            <div className='todolist'>
+                <h3>
+                    <EditableSpan title={title} changeTitle={changeTodolistTitle}/>
+                    <IconButton aria-label="delete" onClick={removeTodolist} disabled={entityStatus === 'loading'}>
+                        <Delete/>
+                    </IconButton>
+                </h3>
+                <div>
+                    <InputComp callBack={(newTitle) => addTask(newTitle)}
+                               label={'Type new task'}
+                               disabled={entityStatus === 'loading'}/>
+                </div>
+                <ul>
+                    {tasks.map((el) => {
+                        return (
+                            <Task key={el.id}
+                                  changeCheckBox={changeCheckBox}
+                                  changeTaskTitle={changeTaskTitle}
+                                  removeTask={removeTask}
+                                  task={el}
+                            />
+                        )
+                    })}
+                </ul>
+                <div>
+                    <ButtonWithMemo title={'All'} color={'primary'}
+                                    variant={filter === 'all' ? 'contained' : "outlined"}
+                                    callback={() => changeFilter('all')}/>
+                    <ButtonWithMemo title={'Active'} color={'secondary'}
+                                    variant={filter === 'active' ? 'contained' : "outlined"}
+                                    callback={() => changeFilter('active')}/>
+                    <ButtonWithMemo title={'Completed'} color={'error'}
+                                    variant={filter === 'completed' ? 'contained' : "outlined"}
+                                    callback={() => changeFilter('completed')}/>
+                </div>
             </div>
-            <ul>
-                {tasks.map((el) => {
-                    return (
-                        <Task key={el.id}
-                              changeCheckBox={changeCheckBox}
-                              changeTaskTitle={changeTaskTitle}
-                              removeTask={removeTask}
-                              task={el}
-                        />
-                    )
-                })}
-            </ul>
-            <div>
-                <ButtonWithMemo title={'All'} color={'primary'} variant={filter === 'all' ? 'contained' : "outlined"}
-                                callback={() => changeFilter('all')}/>
-                <ButtonWithMemo title={'Active'} color={'secondary'}
-                                variant={filter === 'active' ? 'contained' : "outlined"}
-                                callback={() => changeFilter('active')}/>
-                <ButtonWithMemo title={'Completed'} color={'error'}
-                                variant={filter === 'completed' ? 'contained' : "outlined"}
-                                callback={() => changeFilter('completed')}/>
-            </div>
-        </div>
+        </Paper>
     );
 });
 
