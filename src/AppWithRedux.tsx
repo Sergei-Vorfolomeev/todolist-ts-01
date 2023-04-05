@@ -10,10 +10,10 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {RequestStatusType} from "./state/appReducer";
-import {TodolistsList} from "./components/TodolistsList";
+import {TodolistsList} from "components/Todolist/TodolistsList";
 import {Navigate, NavLink, Route, Routes} from "react-router-dom";
-import {Login} from "./components/Login";
-import {ErrorPage404} from "./components/404";
+import {Login} from "components/Login/Login";
+import {ErrorPage404} from "components/common/404/404";
 import {logoutTC, meTC} from "./state/authReducer";
 import CircularProgress from '@mui/material/CircularProgress';
 

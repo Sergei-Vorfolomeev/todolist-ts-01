@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, {AlertProps} from '@mui/material/Alert';
-import {setErrorAC} from "../state/appReducer";
-import {useAppDispatch} from "../state/store";
+import {appActions} from "state/appReducer";
+import {useAppDispatch} from "state/store";
 
 type ErrorSnackBarPropsType = {
     error: null | string
@@ -23,7 +23,7 @@ export const ErrorSnackBar = (props: ErrorSnackBarPropsType) => {
         if (reason === 'clickaway') {
             return;
         }
-        dispatch(setErrorAC(null))
+        dispatch(appActions.setError({error: null}))
     };
 
     return (

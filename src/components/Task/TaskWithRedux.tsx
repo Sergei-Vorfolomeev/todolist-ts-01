@@ -1,13 +1,12 @@
 import React, {memo} from 'react';
 import {useSelector} from "react-redux";
-import {AppRootStateType, useAppDispatch} from "../state/store";
+import {AppRootStateType, useAppDispatch} from "state/store";
 import Checkbox from "@mui/material/Checkbox";
-import {EditableSpan} from "./EditableSpan";
+import {EditableSpan} from "components/common/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
-import {removeTaskAC, updateTaskTC} from "../state/tasksReducer";
-import {TaskDomainType, TaskResponseType, TaskStatuses} from "../api/tasks-api";
-import {RequestStatusType} from "../state/appReducer";
+import {tasksActions, updateTaskTC} from "state/tasksReducer";
+import {TaskDomainType, TaskResponseType, TaskStatuses} from "api/tasks-api";
 
 type TaskWithReduxPropsType = {
     todolistID: string
@@ -16,7 +15,6 @@ type TaskWithReduxPropsType = {
 
 export type TasksStateType = {
     [key: string]: TaskDomainType[]
-        //& {entityTaskStatus: RequestStatusType}
 }
 
 export const TaskWithRedux = memo(({todolistID, taskIndex}:TaskWithReduxPropsType) => {
@@ -33,7 +31,7 @@ export const TaskWithRedux = memo(({todolistID, taskIndex}:TaskWithReduxPropsTyp
         dispatch(updateTaskTC(todolistID, taskID, {title: newTitle}))
     };
     const removeTask =(taskID: string) => {
-        dispatch(removeTaskAC(todolistID, taskID))
+        dispatch(tasksActions.removeTask({todolistID, taskID}))
     };
 
     return (

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {RequestStatusType} from "../state/appReducer";
+import {RequestStatusType} from "state/appReducer";
 
 export enum TaskStatuses {
     New = 0,

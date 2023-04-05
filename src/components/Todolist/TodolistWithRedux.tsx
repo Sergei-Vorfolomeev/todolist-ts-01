@@ -1,21 +1,20 @@
 import React, {memo, useCallback, useEffect} from 'react';
-import '../App.css';
+import 'App.css';
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
-import {InputComp} from "./InputComp";
-import {useAppDispatch, useAppSelector} from "../state/store";
+import {InputComp} from "components/common/Input/InputComp";
+import {useAppDispatch, useAppSelector} from "state/store";
 import {
-    changeFilterAC,
     changeTodolistTitleTC,
     FilterType,
-    removeTodolistTC,
+    removeTodolistTC, todolistsActions,
     TodolistsDomainType
-} from "../state/todolistsReducer";
-import {addTaskTC, removeTaskTC, setTasksTC, updateTaskTC} from "../state/tasksReducer";
-import {ButtonWithMemo} from "./ButtonWithMemo";
-import {TaskDomainType, TaskStatuses} from "../api/tasks-api";
-import {Task} from "./Task";
-import {EditableSpan} from "./EditableSpan";
+} from "state/todolistsReducer";
+import {addTaskTC, removeTaskTC, setTasksTC, updateTaskTC} from "state/tasksReducer";
+import {ButtonWithMemo} from "components/common/Button/ButtonWithMemo";
+import {TaskDomainType, TaskStatuses} from "api/tasks-api";
+import {Task} from "components/Task/Task";
+import {EditableSpan} from "components/common/EditableSpan/EditableSpan";
 
 type TodolistWithReduxPropsType = {
     todolist: TodolistsDomainType
@@ -42,7 +41,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     }, [dispatch, id]);
 
     const changeFilter = useCallback((filterValue: FilterType) => {
-        dispatch(changeFilterAC(id, filterValue))
+        dispatch(todolistsActions.changeFilter({todolistID: id, filterValue}))
     }, [id, dispatch])
 
     const changeCheckBox = useCallback((taskID: string, status: TaskStatuses) => {

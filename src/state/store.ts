@@ -1,10 +1,11 @@
-import { tasksReducer } from './tasksReducer'
-import { todolistsReducer } from './todolistsReducer'
-import {AnyAction, applyMiddleware, combineReducers, legacy_createStore} from 'redux'
-import thunk, {ThunkDispatch} from 'redux-thunk'
+import {tasksReducer} from './tasksReducer'
+import {todolistsReducer} from './todolistsReducer'
+import {AnyAction, combineReducers} from 'redux'
+import thunkMiddleWare, {ThunkDispatch} from 'redux-thunk'
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {appReducer} from "./appReducer";
 import {authReducer} from "./authReducer";
+import {configureStore} from "@reduxjs/toolkit";
 
 // объединяя reducer-ы с помощью combineReducers,
 // мы задаём структуру нашего единственного объекта-состояния
@@ -15,9 +16,13 @@ const rootReducer = combineReducers({
     app: appReducer
 })
 // создаём store
-export const store = legacy_createStore(rootReducer, applyMiddleware(thunk))
+//export const store = legacy_createStore(rootReducer, applyMiddleware(thunk))
+export const store = configureStore({
+    reducer: rootReducer,
+    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunkMiddleWare)
+})
 // определить автоматически тип всего объекта состояния
-export type AppRootStateType = ReturnType<typeof rootReducer>
+export type AppRootStateType = ReturnType<typeof store.getState>
 
 
 //создание типа для диспатча, чтобы он мог принимать thunk
