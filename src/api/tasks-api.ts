@@ -29,7 +29,7 @@ export type TaskResponseType = {
     title: string
     todoListId: string
 }
-export type TaskDomainType = TaskResponseType & {entityTaskStatus: RequestStatusType}
+export type TaskDomainType = TaskResponseType & { entityTaskStatus: RequestStatusType }
 
 
 export type GetTasksResponseType = {
@@ -61,13 +61,18 @@ export type TaskModelAPIType = {
     deadline: string,
 }
 
+export type AddTaskArgType = {
+    todolistID: string
+    title: string
+}
+
 export const tasksAPI = {
     getTasks(todolistId: string) {
         return instance.get<GetTasksResponseType>(`/todo-lists/${todolistId}/tasks`)
             .then(res => res)
     },
-    addTask(todolistId: string, title: string) {
-        return instance.post<ResponseType<{item: TaskResponseType}>>(`/todo-lists/${todolistId}/tasks`, {title})
+    addTask(arg: AddTaskArgType) {
+        return instance.post<ResponseType<{ item: TaskResponseType }>>(`/todo-lists/${arg.todolistID}/tasks`, {title: arg.title})
             .then(res => res)
     },
     deleteTask(todolistId: string, taskId: string) {
@@ -76,7 +81,7 @@ export const tasksAPI = {
     },
 
     updateTask(todolistId: string, taskId: string, model: TaskModelAPIType) {
-        return instance.put<ResponseType<{item: TaskResponseType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
+        return instance.put<ResponseType<{ item: TaskResponseType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
             .then(res => res)
     },
 }

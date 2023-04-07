@@ -10,7 +10,7 @@ import {
     removeTodolistTC, todolistsActions,
     TodolistsDomainType
 } from "state/todolistsReducer";
-import {addTaskTC, removeTaskTC, setTasksTC, updateTaskTC} from "state/tasksReducer";
+import {removeTaskTC, tasksThunks, updateTaskTC} from "state/tasksReducer";
 import {ButtonWithMemo} from "components/common/Button/ButtonWithMemo";
 import {TaskDomainType, TaskStatuses} from "api/tasks-api";
 import {Task} from "components/Task/Task";
@@ -28,7 +28,6 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
 
     if (filter === 'active') {
         tasks = tasks.filter(el => el.status === TaskStatuses.New)
-        // console.log(tasks)
     }
     if (filter === 'completed') {
         tasks = tasks.filter(el => el.status === TaskStatuses.Completed)
@@ -38,7 +37,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
         dispatch(removeTodolistTC(id))
     }
     const addTask = useCallback((newTitle: string) => {
-        dispatch(addTaskTC(id, newTitle))
+        dispatch(tasksThunks.addTask({todolistID: id, title: newTitle}))
     }, [dispatch, id]);
 
     const changeFilter = useCallback((filterValue: FilterType) => {
@@ -59,7 +58,7 @@ export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) =
     };
 
     useEffect(() => {
-        dispatch(setTasksTC(id))
+        dispatch(tasksThunks.fetchTasks(id))
     }, [dispatch, id])
 
     return (
