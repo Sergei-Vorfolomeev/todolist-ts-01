@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import './App.css';
-import {useAppDispatch, useAppSelector} from "./state/store";
+import 'app/App.css';
+import {useAppDispatch, useAppSelector} from "app/store";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,15 +9,15 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import {RequestStatusType} from "./state/appReducer";
-import {TodolistsList} from "components/Todolist/TodolistsList";
+import {RequestStatusType} from "app/appReducer";
+import {TodolistsList} from "features/Todolist/TodolistsList";
 import {Navigate, NavLink, Route, Routes} from "react-router-dom";
-import {Login} from "components/Login/Login";
-import {ErrorPage404} from "components/common/404/404";
-import {logoutTC, meTC} from "./state/authReducer";
+import {Login} from "features/Login/Login";
+import {ErrorPage404} from "common/components/404/404";
+import {logoutTC, meTC} from "features/Login/authReducer";
 import CircularProgress from '@mui/material/CircularProgress';
 
-function AppWithRedux() {
+function App() {
 
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
     const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized)
@@ -78,4 +78,4 @@ function AppWithRedux() {
     );
 }
 
-export default AppWithRedux;
+export default App;

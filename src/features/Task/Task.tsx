@@ -1,9 +1,10 @@
 import React, {memo} from 'react';
 import Checkbox from "@mui/material/Checkbox";
-import {EditableSpan} from "components/common/EditableSpan/EditableSpan";
+import {EditableSpan} from "common/components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
-import {TaskDomainType, TaskStatuses} from "api/tasks-api";
+import {TaskDomainType} from "common/api/tasks-api";
+import {TaskStatuses} from "common/enums/common.enums";
 
 type TaskType = {
     task: TaskDomainType

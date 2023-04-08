@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect} from 'react';
-import {InputComp} from "components/common/Input/InputComp";
-import {TodolistWithRedux} from "components/Todolist/TodolistWithRedux";
-import {ErrorSnackBar} from "components/SnackBar/SnackBar";
-import {useAppDispatch, useAppSelector} from "state/store";
-import {addTodolistTC, setTodolistsTC, TodolistsDomainType} from "state/todolistsReducer";
+import {InputComp} from "common/components/Input/InputComp";
+import {Todolist} from "features/Todolist/Todolist";
+import {ErrorSnackBar} from "common/components/SnackBar/SnackBar";
+import {useAppDispatch, useAppSelector} from "app/store";
+import {addTodolistTC, setTodolistsTC, TodolistsDomainType} from "features/Todolist/todolistsReducer";
 import {Navigate} from "react-router-dom";
 
 export const TodolistsList = () => {
@@ -34,7 +34,7 @@ export const TodolistsList = () => {
             </div>
             {todolists.map(el => {
                 return (
-                    <TodolistWithRedux
+                    <Todolist
                         key={el.id}
                         todolist={el}
                     />

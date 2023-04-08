@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, {AlertProps} from '@mui/material/Alert';
-import {appActions} from "state/appReducer";
-import {useAppDispatch} from "state/store";
+import {appActions} from "app/appReducer";
+import {useAppDispatch} from "app/store";
 
 type ErrorSnackBarPropsType = {
     error: null | string

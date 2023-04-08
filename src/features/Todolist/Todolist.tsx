@@ -1,27 +1,28 @@
 import React, {memo, useCallback, useEffect} from 'react';
-import 'App.css';
+import 'app/App.css';
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
-import {InputComp} from "components/common/Input/InputComp";
-import {useAppDispatch, useAppSelector} from "state/store";
+import {InputComp} from "common/components/Input/InputComp";
+import {useAppDispatch, useAppSelector} from "app/store";
 import {
     changeTodolistTitleTC,
     FilterType,
     removeTodolistTC, todolistsActions,
     TodolistsDomainType
-} from "state/todolistsReducer";
-import {removeTaskTC, tasksThunks, updateTaskTC} from "state/tasksReducer";
-import {ButtonWithMemo} from "components/common/Button/ButtonWithMemo";
-import {TaskDomainType, TaskStatuses} from "api/tasks-api";
-import {Task} from "components/Task/Task";
-import {EditableSpan} from "components/common/EditableSpan/EditableSpan";
+} from "features/Todolist/todolistsReducer";
+import {removeTaskTC, tasksThunks, updateTaskTC} from "features/Task/tasksReducer";
+import {ButtonWithMemo} from "common/components/Button/ButtonWithMemo";
+import {TaskDomainType} from "common/api/tasks-api";
+import {Task} from "features/Task/Task";
+import {EditableSpan} from "common/components/EditableSpan/EditableSpan";
 import {Paper} from "@mui/material";
+import {TaskStatuses} from "common/enums/common.enums";
 
 type TodolistWithReduxPropsType = {
     todolist: TodolistsDomainType
 }
 
-export const TodolistWithRedux = memo(({todolist}: TodolistWithReduxPropsType) => {
+export const Todolist = memo(({todolist}: TodolistWithReduxPropsType) => {
     const {id, title, filter, entityStatus} = todolist
     let tasks = useAppSelector<TaskDomainType[]>(state => state.tasks[id])
     const dispatch = useAppDispatch()

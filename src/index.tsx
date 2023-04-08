@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import AppWithRedux from "./AppWithRedux";
+import App from "app/App";
 import {Provider} from "react-redux";
-import {store} from "./state/store";
+import {store} from "app/store";
 import {HashRouter} from "react-router-dom";
 
 
@@ -14,7 +14,7 @@ root.render(
     // <React.StrictMode>
     <HashRouter>
         <Provider store={store}>
-            <AppWithRedux/>
+            <App/>
         </Provider>
     </HashRouter>
     // </React.StrictMode>

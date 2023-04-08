@@ -1,9 +1,9 @@
-import {todolistAPI, TodolistResponseType} from "api/todolist-api";
+import {todolistAPI, TodolistResponseType} from "common/api/todolist-api";
 import {Dispatch} from "redux";
-import {appActions, RequestStatusType} from "./appReducer";
-import {handleServerAppError, handleServerNetworkError} from "utils/error-utils";
+import {appActions, RequestStatusType} from "app/appReducer";
+import {handleServerAppError, handleServerNetworkError} from "common/utils/error-utils";
 import axios from "axios";
-import {ErrorType} from "./tasksReducer";
+import {ErrorType} from "features/Task/tasksReducer";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {clearTodolistsAndTasks} from "common/actions/common.actions";
 
@@ -85,14 +85,8 @@ export const removeTodolistTC = (todolistID: string) =>
 
             }
         } catch (e) {
-            if (axios.isAxiosError<ErrorType>(e)) {
-                const error = e.response?.data ? e.response?.data.message : e.message
-                handleServerNetworkError(dispatch, error)
+                handleServerNetworkError(dispatch, e)
                 dispatch(todolistsActions.changeEntityStatus({todolistID, entityStatus: 'failed'}))
-            } else {
-                handleServerNetworkError(dispatch, 'Some Error')
-                dispatch(todolistsActions.changeEntityStatus({todolistID, entityStatus: 'failed'}))
-            }
         }
     }
 export const addTodolistTC = (title: string) =>
@@ -108,12 +102,7 @@ export const addTodolistTC = (title: string) =>
                 handleServerAppError<{ item: TodolistResponseType }>(dispatch, res.data)
             }
         } catch (e) {
-            if (axios.isAxiosError<ErrorType>(e)) {
-                const error = e.response?.data ? e.response?.data.message : e.message
-                handleServerNetworkError(dispatch, error)
-            } else {
-                handleServerNetworkError(dispatch, 'Some Error')
-            }
+                handleServerNetworkError(dispatch, e)
         }
     }
 export const changeTodolistTitleTC = (todolistID: string, title: string) =>
@@ -128,11 +117,6 @@ export const changeTodolistTitleTC = (todolistID: string, title: string) =>
                 handleServerAppError(dispatch, res.data)
             }
         } catch (e) {
-            if (axios.isAxiosError<ErrorType>(e)) {
-                const error = e.response?.data ? e.response?.data.message : e.message
-                handleServerNetworkError(dispatch, error)
-            } else {
-                handleServerNetworkError(dispatch, 'Some Error')
-            }
+                handleServerNetworkError(dispatch, e)
         }
     }

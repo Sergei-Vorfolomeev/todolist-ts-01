@@ -1,10 +1,10 @@
 import {Dispatch} from "redux";
-import {authAPI, LoginType, UserType} from "api/auth-api";
-import {handleServerAppError, handleServerNetworkError} from "utils/error-utils";
+import {authAPI, LoginType, UserType} from "common/api/auth-api";
+import {handleServerAppError, handleServerNetworkError} from "common/utils/error-utils";
 import axios from "axios";
-import {ErrorType} from "./tasksReducer";
+import {ErrorType} from "features/Task/tasksReducer";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {appActions} from "state/appReducer";
+import {appActions} from "app/appReducer";
 import {clearTodolistsAndTasks} from "common/actions/common.actions";
 
 const initialState = {

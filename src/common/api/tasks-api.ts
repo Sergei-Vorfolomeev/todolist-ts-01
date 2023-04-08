@@ -1,21 +1,7 @@
 import axios from "axios";
-import {RequestStatusType} from "state/appReducer";
-
-export enum TaskStatuses {
-    New = 0,
-    InProgress = 1,
-    Completed = 2,
-    Draft = 3,
-}
-
-export enum TaskPriorities {
-    Low = 0,
-    Middle = 1,
-    High = 2,
-    Urgently = 3,
-    Later = 4,
-}
-
+import {RequestStatusType} from "app/appReducer";
+import {TaskModelDomainType} from "features/Task/tasksReducer";
+import {TaskPriorities, TaskStatuses} from "common/enums/common.enums";
 
 export type TaskResponseType = {
     addedDate: string
@@ -64,6 +50,12 @@ export type TaskModelAPIType = {
 export type AddTaskArgType = {
     todolistID: string
     title: string
+}
+
+export type UpdateTaskArgType = {
+    todolistID: string,
+    taskID: string,
+    domainModel: TaskModelDomainType
 }
 
 export const tasksAPI = {
