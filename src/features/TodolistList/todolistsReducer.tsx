@@ -1,7 +1,7 @@
 import {todolistAPI, TodolistResponseType} from "common/api/todolist-api";
 import {Dispatch} from "redux";
 import {appActions, RequestStatusType} from "app/appReducer";
-import {handleServerAppError, handleServerNetworkError} from "common/utils/error-utils";
+import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from "common/utils";
 import axios from "axios";
 import {ErrorType} from "features/Task/tasksReducer";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
@@ -15,6 +15,28 @@ export type FilterType = 'all' | 'active' | 'completed'
 
 const initialState: TodolistsDomainType[] = [];
 
+export const removeTodolist = createAppAsyncThunk<{ todolistID: string }, string>
+('todolists/removeTodolist', async (todolistID: string, thunkAPI) => {
+    const {dispatch, rejectWithValue} = thunkAPI
+    dispatch(appActions.setAppStatus({status: 'loading'}))
+    dispatch(todolistsActions.changeEntityStatus({todolistID, entityStatus: 'loading'}))
+    try {
+        const res = await todolistAPI.deleteTodolist(todolistID)
+        if (res.data.resultCode === 0) {
+            dispatch(appActions.setAppStatus({status: 'succeeded'}))
+            return {todolistID}
+        } else {
+            handleServerAppError(dispatch, res.data)
+            dispatch(appActions.setAppStatus({status: 'failed'}))
+            return rejectWithValue(null)
+        }
+    } catch (e) {
+        handleServerNetworkError(dispatch, e)
+        dispatch(todolistsActions.changeEntityStatus({todolistID, entityStatus: 'failed'}))
+        return rejectWithValue(null)
+    }
+})
+
 const slice = createSlice({
     name: 'todolists',
     initialState,
@@ -22,10 +44,6 @@ const slice = createSlice({
         addTodolist: (state, action: PayloadAction<{ todolist: TodolistResponseType }>) => {
             const newTodo: TodolistsDomainType = {...action.payload.todolist, filter: 'all', entityStatus: 'idle'}
             state.unshift(newTodo)
-        },
-        removeTodolist: (state, action: PayloadAction<{ todolistID: string }>) => {
-            const index = state.findIndex(el => el.id === action.payload.todolistID)
-            state.splice(index, 1)
         },
         changeFilter: (state, action: PayloadAction<{ todolistID: string, filterValue: FilterType }>) => {
             const index = state.findIndex(el => el.id === action.payload.todolistID)
@@ -44,6 +62,10 @@ const slice = createSlice({
         }
     },
     extraReducers: builder => {
+        builder.addCase(removeTodolist.fulfilled, (state, action) => {
+            const index = state.findIndex(el => el.id === action.payload.todolistID)
+            state.splice(index, 1)
+        })
         builder.addCase(clearTodolistsAndTasks, () => {
             return []
         })
@@ -52,6 +74,7 @@ const slice = createSlice({
 
 export const todolistsReducer = slice.reducer
 export const todolistsActions = slice.actions
+export const todolistsThunks = {removeTodolist}
 
 // THUNKS
 export const setTodolistsTC = () =>
@@ -70,25 +93,7 @@ export const setTodolistsTC = () =>
             }
         }
     }
-export const removeTodolistTC = (todolistID: string) =>
-    async (dispatch: Dispatch) => {
-        dispatch(appActions.setAppStatus({status: 'loading'}))
-        dispatch(todolistsActions.changeEntityStatus({todolistID, entityStatus: 'loading'}))
-        try {
-            const res = await todolistAPI.deleteTodolist(todolistID)
-            if (res.data.resultCode === 0) {
-                dispatch(todolistsActions.removeTodolist({todolistID}))
-                dispatch(appActions.setAppStatus({status: 'succeeded'}))
-            } else {
-                handleServerAppError(dispatch, res.data)
-                dispatch(appActions.setAppStatus({status: 'failed'}))
 
-            }
-        } catch (e) {
-                handleServerNetworkError(dispatch, e)
-                dispatch(todolistsActions.changeEntityStatus({todolistID, entityStatus: 'failed'}))
-        }
-    }
 export const addTodolistTC = (title: string) =>
     async (dispatch: Dispatch) => {
         dispatch(appActions.setAppStatus({status: 'loading'}))

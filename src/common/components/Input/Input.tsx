@@ -8,7 +8,7 @@ type InputCompPropsType = {
     disabled?: boolean
 }
 
-export const InputComp = memo((props: InputCompPropsType) => {
+export const Input = memo((props: InputCompPropsType) => {
 
     const [newTitle, setNewTitle] = useState<string>('')
     const [error, setError] = useState<string | null>(null)

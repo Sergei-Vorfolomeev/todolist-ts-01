@@ -2,19 +2,17 @@ import React, {memo, useCallback, useEffect} from 'react';
 import 'app/App.css';
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
-import {InputComp} from "common/components/Input/InputComp";
 import {useAppDispatch, useAppSelector} from "app/store";
 import {
     changeTodolistTitleTC,
     FilterType,
-    removeTodolistTC, todolistsActions,
-    TodolistsDomainType
-} from "features/Todolist/todolistsReducer";
-import {removeTaskTC, tasksThunks} from "features/Task/tasksReducer";
-import {ButtonWithMemo} from "common/components/Button/ButtonWithMemo";
+    todolistsActions,
+    TodolistsDomainType, todolistsThunks
+} from "features/TodolistList/todolistsReducer";
+import {tasksThunks} from "features/Task/tasksReducer";
+import {ButtonWithMemo, EditableSpan, Input} from "common/components";
 import {TaskDomainType} from "common/api/tasks-api";
-import {Task} from "features/Task/Task";
-import {EditableSpan} from "common/components/EditableSpan/EditableSpan";
+import {Task} from "features";
 import {Paper} from "@mui/material";
 import {TaskStatuses} from "common/enums/common.enums";
 
@@ -23,8 +21,8 @@ type TodolistWithReduxPropsType = {
 }
 
 export const Todolist = memo(({todolist}: TodolistWithReduxPropsType) => {
-    const {id, title, filter, entityStatus} = todolist
-    let tasks = useAppSelector<TaskDomainType[]>(state => state.tasks[id])
+    const {id: todolistID, title, filter, entityStatus} = todolist
+    let tasks = useAppSelector<TaskDomainType[]>(state => state.tasks[todolistID])
     const dispatch = useAppDispatch()
 
     if (filter === 'active') {
@@ -35,37 +33,37 @@ export const Todolist = memo(({todolist}: TodolistWithReduxPropsType) => {
     }
 
     const removeTodolist = () => {
-        dispatch(removeTodolistTC(id))
+        dispatch(todolistsThunks.removeTodolist(todolistID))
     }
     const addTask = useCallback((newTitle: string) => {
-        dispatch(tasksThunks.addTask({todolistID: id, title: newTitle}))
-    }, [dispatch, id]);
+        dispatch(tasksThunks.addTask({todolistID, title: newTitle}))
+    }, [dispatch, todolistID]);
 
     const changeFilter = useCallback((filterValue: FilterType) => {
-        dispatch(todolistsActions.changeFilter({todolistID: id, filterValue}))
-    }, [id, dispatch])
+        dispatch(todolistsActions.changeFilter({todolistID, filterValue}))
+    }, [todolistID, dispatch])
 
     const changeCheckBox = useCallback((taskID: string, status: TaskStatuses) => {
         dispatch(tasksThunks.updateTask({
-            todolistID: id, taskID, domainModel: {status}
+            todolistID, taskID, domainModel: {status}
         }))
-    }, [id, dispatch])
+    }, [todolistID, dispatch])
     const changeTaskTitle = useCallback((taskID: string, newTitle: string) => {
             dispatch(tasksThunks.updateTask({
-                todolistID: id, taskID, domainModel: {title: newTitle}
+                todolistID: todolistID, taskID, domainModel: {title: newTitle}
             }))
         },
-        [id, dispatch])
+        [todolistID, dispatch])
     const removeTask = useCallback((taskID: string) => {
-        dispatch(removeTaskTC(id, taskID))
-    }, [id, dispatch]);
+        dispatch(tasksThunks.removeTask({todolistID, taskID}))
+    }, [todolistID, dispatch]);
     const changeTodolistTitle = (newTitle: string) => {
-        dispatch(changeTodolistTitleTC(id, newTitle))
+        dispatch(changeTodolistTitleTC(todolistID, newTitle))
     };
 
     useEffect(() => {
-        dispatch(tasksThunks.fetchTasks(id))
-    }, [dispatch, id])
+        dispatch(tasksThunks.fetchTasks(todolistID))
+    }, [dispatch, todolistID])
 
     return (
         <Paper elevation={5} style={{margin: '0 25px 25px 0'}}>
@@ -77,9 +75,9 @@ export const Todolist = memo(({todolist}: TodolistWithReduxPropsType) => {
                     </IconButton>
                 </h3>
                 <div>
-                    <InputComp callBack={(newTitle) => addTask(newTitle)}
-                               label={'Type new task'}
-                               disabled={entityStatus === 'loading'}/>
+                    <Input callBack={(newTitle) => addTask(newTitle)}
+                           label={'Type new task'}
+                           disabled={entityStatus === 'loading'}/>
                 </div>
                 <ul>
                     {tasks.map((el) => {

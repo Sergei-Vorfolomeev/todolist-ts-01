@@ -1,10 +1,10 @@
 import {tasksReducer} from 'features/Task/tasksReducer'
-import {todolistsReducer} from 'features/Todolist/todolistsReducer'
+import {todolistsReducer} from 'features/TodolistList/todolistsReducer'
 import {AnyAction, combineReducers} from 'redux'
 import thunkMiddleWare, {ThunkDispatch} from 'redux-thunk'
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {appReducer} from "app/appReducer";
-import {authReducer} from "features/Login/authReducer";
+import {authReducer} from "features/auth/authReducer";
 import {configureStore} from "@reduxjs/toolkit";
 
 // объединяя reducer-ы с помощью combineReducers,

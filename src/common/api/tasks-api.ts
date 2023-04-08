@@ -57,6 +57,10 @@ export type UpdateTaskArgType = {
     taskID: string,
     domainModel: TaskModelDomainType
 }
+export type RemoveTaskArgType = {
+    todolistID: string,
+    taskID: string
+}
 
 export const tasksAPI = {
     getTasks(todolistId: string) {
@@ -67,8 +71,8 @@ export const tasksAPI = {
         return instance.post<ResponseType<{ item: TaskResponseType }>>(`/todo-lists/${arg.todolistID}/tasks`, {title: arg.title})
             .then(res => res)
     },
-    deleteTask(todolistId: string, taskId: string) {
-        return instance.delete<ResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`)
+    deleteTask(arg: RemoveTaskArgType) {
+        return instance.delete<ResponseType>(`/todo-lists/${arg.todolistID}/tasks/${arg.taskID}`)
             .then(res => res)
     },
 

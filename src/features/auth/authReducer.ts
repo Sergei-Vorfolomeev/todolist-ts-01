@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import {authAPI, LoginType, UserType} from "common/api/auth-api";
-import {handleServerAppError, handleServerNetworkError} from "common/utils/error-utils";
+import {handleServerAppError, handleServerNetworkError} from "common/utils";
 import axios from "axios";
 import {ErrorType} from "features/Task/tasksReducer";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
@@ -23,25 +23,6 @@ const slice = createSlice({
 
 export const authReducer = slice.reducer
 export const authActions = slice.actions
-
-// export const authReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
-//     switch (action.type) {
-//         case 'login':
-//             return {...state, isLoggedIn: action.payload.value}
-//         default:
-//             return state
-//     }
-// }
-
-// actions
-// const setIsLoggedInAC = (value: boolean) => {
-//     return {
-//         type: 'login',
-//         payload: {
-//             value
-//         }
-//     } as const
-// }
 
 // thunks
 export const loginTC = (data: LoginType) =>

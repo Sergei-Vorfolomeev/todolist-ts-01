@@ -10,11 +10,11 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {RequestStatusType} from "app/appReducer";
-import {TodolistsList} from "features/Todolist/TodolistsList";
+import {TodolistsList} from "features";
 import {Navigate, NavLink, Route, Routes} from "react-router-dom";
-import {Login} from "features/Login/Login";
-import {ErrorPage404} from "common/components/404/404";
-import {logoutTC, meTC} from "features/Login/authReducer";
+import {Login} from "features/auth";
+import {ErrorPage404} from "common/components";
+import {logoutTC, meTC} from "features/auth/authReducer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
