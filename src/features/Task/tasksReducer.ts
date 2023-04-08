@@ -31,11 +31,7 @@ export const fetchTasks = createAppAsyncThunk<{ tasks: TaskResponseType[], todol
         dispatch(appActions.setAppStatus({status: 'succeeded'}))
         return {tasks: res.data.items, todolistID}
     } catch (e) {
-        if (axios.isAxiosError<ErrorType>(e)) {
-            handleServerNetworkError(dispatch, e)
-        } else {
-            handleServerNetworkError(dispatch, 'Some Error')
-        }
+        handleServerNetworkError(dispatch, e)
         return rejectWithValue(null)
     }
 })
@@ -54,12 +50,7 @@ export const addTask = createAppAsyncThunk<{ task: TaskResponseType }, AddTaskAr
             return rejectWithValue(null)
         }
     } catch (e) {
-        if (axios.isAxiosError<ErrorType>(e)) {
-            const error = e.response?.data ? e.response?.data.message : e.message
-            handleServerNetworkError(dispatch, error)
-        } else {
-            handleServerNetworkError(dispatch, 'Some Error')
-        }
+        handleServerNetworkError(dispatch, e)
         return rejectWithValue(null)
     }
 })
@@ -91,45 +82,10 @@ export const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgTy
             return rejectWithValue(null)
         }
     } catch (e) {
-        if (axios.isAxiosError<ErrorType>(e)) {
-            const error = e.response?.data ? e.response?.data.message : e.message
-            handleServerNetworkError(dispatch, error)
-        } else {
-            handleServerNetworkError(dispatch, 'Some Error')
-        }
+        handleServerNetworkError(dispatch, e)
         return rejectWithValue(null)
     }
 })
-
-export const updateTaskTC = (todolistID: string, taskID: string, domainModel: TaskModelDomainType) =>
-    async (dispatch: Dispatch, getState: () => AppRootStateType) => {
-        dispatch(appActions.setAppStatus({status: 'loading'}))
-        const task = getState().tasks[todolistID].find(el => el.id === taskID)
-        if (!task) {
-            console.warn('Task not found in the state!')
-            return;
-        }
-        const apiModel: TaskModelAPIType = {
-            title: task.title,
-            description: task.description,
-            status: task.status,
-            priority: task.priority,
-            startDate: task.startDate,
-            deadline: task.deadline,
-            ...domainModel,
-        }
-        try {
-            const res = await tasksAPI.updateTask(todolistID, taskID, apiModel)
-            if (res.data.resultCode === 0) {
-                dispatch(tasksActions.updateTask({todolistID, taskID, apiModel}))
-                dispatch(appActions.setAppStatus({status: 'succeeded'}))
-            } else {
-                handleServerAppError<{ item: TaskResponseType }>(dispatch, res.data)
-            }
-        } catch (e) {
-                handleServerNetworkError(dispatch, e)
-        }
-    }
 
 const slice = createSlice({
     name: 'tasks',
@@ -138,11 +94,6 @@ const slice = createSlice({
         removeTask: (state, action: PayloadAction<{ todolistID: string, taskID: string }>) => {
             const index = state[action.payload.todolistID].findIndex(el => el.id === action.payload.taskID)
             if (index !== -1) state[action.payload.todolistID].splice(index, 1)
-        },
-        updateTask: (state, action: PayloadAction<{ todolistID: string, taskID: string, apiModel: TaskModelAPIType }>) => {
-            const task = state[action.payload.todolistID]
-            const index = task.findIndex(el => el.id === action.payload.taskID)
-            if (index !== -1) task[index] = {...task[index], ...action.payload.apiModel}
         },
         addTasksInTodolist: (state, action: PayloadAction<{ todolistId: string }>) => {
         },
@@ -208,8 +159,8 @@ export const removeTaskTC = (todolistID: string, taskID: string) =>
 
             }
         } catch (e) {
-                handleServerNetworkError(dispatch, e)
-                dispatch(tasksActions.changeEntityTaskStatus({todolistID, taskID, entityTaskStatus: 'failed'}))
+            handleServerNetworkError(dispatch, e)
+            dispatch(tasksActions.changeEntityTaskStatus({todolistID, taskID, entityTaskStatus: 'failed'}))
         }
     }
 

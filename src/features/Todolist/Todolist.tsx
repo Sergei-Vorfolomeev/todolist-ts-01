@@ -10,7 +10,7 @@ import {
     removeTodolistTC, todolistsActions,
     TodolistsDomainType
 } from "features/Todolist/todolistsReducer";
-import {removeTaskTC, tasksThunks, updateTaskTC} from "features/Task/tasksReducer";
+import {removeTaskTC, tasksThunks} from "features/Task/tasksReducer";
 import {ButtonWithMemo} from "common/components/Button/ButtonWithMemo";
 import {TaskDomainType} from "common/api/tasks-api";
 import {Task} from "features/Task/Task";
@@ -46,11 +46,16 @@ export const Todolist = memo(({todolist}: TodolistWithReduxPropsType) => {
     }, [id, dispatch])
 
     const changeCheckBox = useCallback((taskID: string, status: TaskStatuses) => {
-        dispatch(updateTaskTC(id, taskID, {status}))
+        dispatch(tasksThunks.updateTask({
+            todolistID: id, taskID, domainModel: {status}
+        }))
     }, [id, dispatch])
     const changeTaskTitle = useCallback((taskID: string, newTitle: string) => {
-        dispatch(updateTaskTC(id, taskID, {title: newTitle}))
-    }, [id, dispatch]);
+            dispatch(tasksThunks.updateTask({
+                todolistID: id, taskID, domainModel: {title: newTitle}
+            }))
+        },
+        [id, dispatch])
     const removeTask = useCallback((taskID: string) => {
         dispatch(removeTaskTC(id, taskID))
     }, [id, dispatch]);
