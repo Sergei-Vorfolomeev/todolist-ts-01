@@ -8,10 +8,10 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
-import {loginTC} from "features/auth/authReducer";
 import {useAppDispatch, useAppSelector} from "app/store";
 import {Navigate} from "react-router-dom";
 import {ErrorSnackBar} from "common/components";
+import {authThunks} from "features/auth/authReducer";
 
 type FormikErrorType = {
     email?: string
@@ -45,7 +45,7 @@ export const Login = () => {
             return errors
         },
         onSubmit: values => {
-            dispatch(loginTC(values));
+            dispatch(authThunks.login(values));
             formik.resetForm()
         },
     });

@@ -14,7 +14,7 @@ import {TodolistsList} from "features";
 import {Navigate, NavLink, Route, Routes} from "react-router-dom";
 import {Login} from "features/auth";
 import {ErrorPage404} from "common/components";
-import {logoutTC, meTC} from "features/auth/authReducer";
+import {authThunks} from "features/auth/authReducer";
 import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
@@ -25,18 +25,18 @@ function App() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(meTC())
+        dispatch(authThunks.me())
     }, [dispatch])
 
     const logoutHandler = () => {
-        dispatch(logoutTC())
+        dispatch(authThunks.logout())
     }
 
     if (!isInitialized) {
         return (
-        <div style={{position: 'fixed', width: '100%', textAlign: 'center', top: '45%' }}>
-            <CircularProgress />
-        </div>
+            <div style={{position: 'fixed', width: '100%', textAlign: 'center', top: '45%'}}>
+                <CircularProgress/>
+            </div>
         )
     }
 
@@ -61,7 +61,8 @@ function App() {
                             <NavLink to={'/login'}>
                                 {!isLoggedIn && <Button color="inherit" style={{color: 'white'}}>Log in</Button>}
                             </NavLink>
-                            {isLoggedIn && <Button color="inherit" style={{color: 'white'}} onClick={logoutHandler}>Log out</Button>}
+                            {isLoggedIn && <Button color="inherit" style={{color: 'white'}} onClick={logoutHandler}>Log
+                                out</Button>}
                         </Toolbar>
                         {status === 'loading' && <LinearProgress color="secondary"/>}
                     </AppBar>
@@ -73,7 +74,6 @@ function App() {
                 <Route path={'/404'} element={<ErrorPage404/>}/>
                 <Route path={'*'} element={<Navigate to={'/404'}/>}/>
             </Routes>
-
         </div>
     );
 }
