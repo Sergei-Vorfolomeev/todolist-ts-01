@@ -1,5 +1,6 @@
 import {
-    AddTaskArgType, RemoveTaskArgType,
+    AddTaskArgType,
+    RemoveTaskArgType,
     TaskDomainType,
     TaskModelAPIType,
     TaskResponseType,
@@ -9,7 +10,7 @@ import {
 import {appActions, RequestStatusType} from "app/appReducer";
 import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from "common/utils";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {todolistsActions, todolistsThunks} from "features/TodolistList/todolistsReducer";
+import {todolistsThunks} from "features/TodolistList/todolistsReducer";
 import {clearTodolistsAndTasks} from "common/actions/common.actions";
 import {TaskPriorities, TaskStatuses} from "common/enums/common.enums";
 
@@ -112,8 +113,8 @@ const slice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
-        addTasksInTodolist: (state, action: PayloadAction<{ todolistId: string }>) => {
-        },
+        // addTasksInTodolist: (state, action: PayloadAction<{ todolistId: string }>) => {
+        // },
         changeEntityTaskStatus: (state, action: PayloadAction<{ todolistID: string, taskID: string, entityTaskStatus: RequestStatusType }>) => {
             const task = state[action.payload.todolistID]
             const index = task.findIndex(el => el.id === action.payload.taskID)
@@ -137,13 +138,13 @@ const slice = createSlice({
             const index = task.findIndex(el => el.id === action.payload.taskID)
             if (index !== -1) task[index] = {...task[index], ...action.payload.domainModel}
         })
-        builder.addCase(todolistsActions.addTodolist, (state, action) => {
+        builder.addCase(todolistsThunks.addTodolist.fulfilled, (state, action) => {
             state[action.payload.todolist.id] = []
         })
         builder.addCase(todolistsThunks.removeTodolist.fulfilled, (state, action) => {
             delete state[action.payload.todolistID]
         })
-        builder.addCase(todolistsActions.setTodolists, (state, action) => {
+        builder.addCase(todolistsThunks.fetchTodolists.fulfilled, (state, action) => {
             action.payload.todolists.forEach(el => {
                 state[el.id] = []
             })

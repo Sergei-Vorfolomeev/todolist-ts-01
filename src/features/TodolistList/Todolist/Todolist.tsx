@@ -4,7 +4,6 @@ import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
 import {useAppDispatch, useAppSelector} from "app/store";
 import {
-    changeTodolistTitleTC,
     FilterType,
     todolistsActions,
     TodolistsDomainType, todolistsThunks
@@ -57,8 +56,8 @@ export const Todolist = memo(({todolist}: TodolistWithReduxPropsType) => {
     const removeTask = useCallback((taskID: string) => {
         dispatch(tasksThunks.removeTask({todolistID, taskID}))
     }, [todolistID, dispatch]);
-    const changeTodolistTitle = (newTitle: string) => {
-        dispatch(changeTodolistTitleTC(todolistID, newTitle))
+    const changeTodolistTitle = (title: string) => {
+        dispatch(todolistsThunks.changeTodolistTitle({todolistID, title}))
     };
 
     useEffect(() => {

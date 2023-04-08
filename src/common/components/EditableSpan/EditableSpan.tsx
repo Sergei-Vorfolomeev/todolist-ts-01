@@ -2,7 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 
 type EditableSpanPropsType = {
     title: string
-    changeTitle: (newTitle: string) => void
+    changeTitle: (title: string) => void
 }
 
 export const EditableSpan = memo((props: EditableSpanPropsType) => {

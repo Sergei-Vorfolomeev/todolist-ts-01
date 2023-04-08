@@ -14,6 +14,8 @@ export type ResponseType<D = {}> = {
     resultCode: number
 }
 
+export type ChangeTodolistTitleArgType = { todolistID: string, title: string }
+
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1',
     withCredentials: true,
@@ -35,8 +37,8 @@ export const todolistAPI = {
         return instance.delete<ResponseType>(`/todo-lists/${todolistId}`)
             .then(res => res)
     },
-    updateTodolist (todolistId: string, title: string) {
-        return instance.put<ResponseType>(`/todo-lists/${todolistId}`, {title: title})
+    updateTodolist (arg: ChangeTodolistTitleArgType) {
+        return instance.put<ResponseType>(`/todo-lists/${arg.todolistID}`, {title: arg.title})
             .then(res => res)
     },
 }

@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 import {Input, ErrorSnackBar} from "common/components";
 import {Todolist} from "features/TodolistList";
 import {useAppDispatch, useAppSelector} from "app/store";
-import {addTodolistTC, setTodolistsTC, TodolistsDomainType} from "features/TodolistList/todolistsReducer";
+import {TodolistsDomainType, todolistsThunks} from "features/TodolistList/todolistsReducer";
 import {Navigate} from "react-router-dom";
 
 export const TodolistsList = () => {
@@ -14,11 +14,11 @@ export const TodolistsList = () => {
 
     useEffect(() => {
         if (!isLoggedIn) return
-        dispatch(setTodolistsTC())
+        dispatch(todolistsThunks.fetchTodolists())
     }, [dispatch, isLoggedIn])
 
     const addTodolist = useCallback((newTitle: string) => {
-        dispatch(addTodolistTC(newTitle))
+        dispatch(todolistsThunks.addTodolist(newTitle))
     }, [dispatch])
 
     if (!isLoggedIn) {
