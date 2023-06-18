@@ -1,18 +1,5 @@
 import axios from "axios";
-
-
-export type TodolistResponseType = {
-    addedDate: string
-    id: string
-    order: number
-    title: string
-}
-export type ResponseType<D = {}> = {
-    data: D
-    fieldsErrors: string[]
-    messages: string[]
-    resultCode: number
-}
+import {TodolistResponseType, ResponseType} from "common/types";
 
 export type ChangeTodolistTitleArgType = { todolistID: string, title: string }
 

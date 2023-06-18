@@ -1,9 +1,7 @@
 import {
     AddTaskArgType,
     RemoveTaskArgType,
-    TaskDomainType,
     TaskModelAPIType,
-    TaskResponseType,
     tasksAPI,
     UpdateTaskArgType
 } from "common/api/tasks-api";
@@ -13,6 +11,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {todolistsThunks} from "features/TodolistList/todolistsReducer";
 import {clearTodolistsAndTasks} from "common/actions/common.actions";
 import {TaskPriorities, TaskStatuses} from "common/enums/common.enums";
+import {TaskDomainType, TaskResponseType} from "common/types/common.types";
 
 export type TasksStateType = {
     [key: string]: TaskDomainType[]
@@ -113,8 +112,6 @@ const slice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
-        // addTasksInTodolist: (state, action: PayloadAction<{ todolistId: string }>) => {
-        // },
         changeEntityTaskStatus: (state, action: PayloadAction<{ todolistID: string, taskID: string, entityTaskStatus: RequestStatusType }>) => {
             const task = state[action.payload.todolistID]
             const index = task.findIndex(el => el.id === action.payload.taskID)

@@ -1,8 +1,9 @@
-import {ChangeTodolistTitleArgType, todolistAPI, TodolistResponseType} from "common/api/todolist-api";
+import {ChangeTodolistTitleArgType, todolistAPI} from "common/api/todolist-api";
 import {appActions, RequestStatusType} from "app/appReducer";
 import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from "common/utils";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {clearTodolistsAndTasks} from "common/actions/common.actions";
+import {TodolistResponseType} from "common/types";
 
 export type TodolistsDomainType = TodolistResponseType & {
     filter: FilterType,

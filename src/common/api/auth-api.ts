@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ResponseType} from "common/api/todolist-api";
+import {ResponseType} from "common/types";
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1',
@@ -8,18 +8,6 @@ const instance = axios.create({
         'API-KEY': '9b7bf10d-55fc-4d6e-b69f-50e6002c9999',
     }
 })
-
-export type LoginType = {
-    email: string
-    password: string
-    rememberMe?: boolean
-    captcha?: string
-}
-export type UserType = {
-    id: number,
-    email: string,
-    login: string
-}
 
 export const authAPI = {
     login (data: LoginType) {
@@ -31,4 +19,18 @@ export const authAPI = {
     logout () {
         return instance.delete<ResponseType>('/auth/login')
     }
+}
+
+// TYPES
+export type LoginType = {
+    email: string
+    password: string
+    rememberMe?: boolean
+    captcha?: string
+}
+
+export type UserType = {
+    id: number,
+    email: string,
+    login: string
 }

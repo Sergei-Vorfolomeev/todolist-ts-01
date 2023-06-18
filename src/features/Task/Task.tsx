@@ -3,8 +3,8 @@ import Checkbox from "@mui/material/Checkbox";
 import {EditableSpan} from "common/components";
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
-import {TaskDomainType} from "common/api/tasks-api";
 import {TaskStatuses} from "common/enums/common.enums";
+import {TaskDomainType} from "common/types/common.types";
 
 type TaskType = {
     task: TaskDomainType

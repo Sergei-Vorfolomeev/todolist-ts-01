@@ -56,7 +56,7 @@ export const me = createAppAsyncThunk<{ value: boolean }, void>
             dispatch(appActions.setAppStatus({status: 'succeeded'}))
             return {value: true}
         } else {
-            handleServerAppError<UserType>(dispatch, res.data)
+            // handleServerAppError<UserType>(dispatch, res.data)
             return rejectWithValue(null)
         }
     } catch (e) {

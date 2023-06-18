@@ -10,10 +10,10 @@ import {
 } from "features/TodolistList/todolistsReducer";
 import {tasksThunks} from "features/Task/tasksReducer";
 import {ButtonWithMemo, EditableSpan, Input} from "common/components";
-import {TaskDomainType} from "common/api/tasks-api";
 import {Task} from "features";
 import {Paper} from "@mui/material";
 import {TaskStatuses} from "common/enums/common.enums";
+import {TaskDomainType} from "common/types/common.types";
 
 type TodolistWithReduxPropsType = {
     todolist: TodolistsDomainType
