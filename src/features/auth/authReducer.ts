@@ -20,7 +20,7 @@ export const login = createAppAsyncThunk<{ value: boolean }, LoginType>
             return {value: true}
         } else {
             handleServerAppError<{ userId: number }>(dispatch, res.data)
-            return rejectWithValue(null)
+            return rejectWithValue(res.data)
         }
     } catch (e) {
         handleServerNetworkError(dispatch, e)
@@ -57,6 +57,7 @@ export const me = createAppAsyncThunk<{ value: boolean }, void>
             return {value: true}
         } else {
             // handleServerAppError<UserType>(dispatch, res.data)
+            dispatch(appActions.setAppStatus({status: 'failed'}))
             return rejectWithValue(null)
         }
     } catch (e) {

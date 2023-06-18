@@ -3,9 +3,14 @@ import {RequestStatusType} from "app/appReducer";
 
 export type ResponseType<D = {}> = {
     data: D
-    fieldsErrors: string[]
+    fieldsErrors: FieldsErrorResponseType[]
     messages: string[]
     resultCode: number
+}
+
+type FieldsErrorResponseType = {
+    field: string,
+    error: string
 }
 
 export type TodolistResponseType = {

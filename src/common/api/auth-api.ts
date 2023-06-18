@@ -25,7 +25,7 @@ export const authAPI = {
 export type LoginType = {
     email: string
     password: string
-    rememberMe?: boolean
+    rememberMe: boolean
     captcha?: string
 }
 
