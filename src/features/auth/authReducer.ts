@@ -19,7 +19,7 @@ export const login = createAppAsyncThunk<{ value: boolean }, LoginType>
             dispatch(appActions.setAppStatus({status: 'succeeded'}))
             return {value: true}
         } else {
-            handleServerAppError<{ userId: number }>(dispatch, res.data)
+            handleServerAppError<{ userId: number }>(dispatch, res.data,false)
             return rejectWithValue(res.data)
         }
     } catch (e) {
@@ -56,8 +56,7 @@ export const me = createAppAsyncThunk<{ value: boolean }, void>
             dispatch(appActions.setAppStatus({status: 'succeeded'}))
             return {value: true}
         } else {
-            // handleServerAppError<UserType>(dispatch, res.data)
-            dispatch(appActions.setAppStatus({status: 'failed'}))
+            handleServerAppError<UserType>(dispatch, res.data, false)
             return rejectWithValue(null)
         }
     } catch (e) {
